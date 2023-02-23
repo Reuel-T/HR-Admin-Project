@@ -1,0 +1,4 @@
+Server=CHRIS;Initial Catalog=HR-ADMIN;Trusted_Connection=True;
+
+scaffold command
+dotnet ef dbcontext scaffold "Server=CHRIS;Initial Catalog=HR-ADMIN;Trusted_Connection=True;Encrypt=False" Microsoft.EntityFrameworkCore.SqlServer -o Models -f
