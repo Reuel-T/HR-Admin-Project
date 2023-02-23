@@ -22,14 +22,14 @@ public partial class HrAdminContext : DbContext
     public virtual DbSet<Employee> Employees { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Server=CHRIS;Initial Catalog=HR-ADMIN;Trusted_Connection=True;Encrypt=False");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Department>(entity =>
         {
-            entity.HasKey(e => e.DepartmentId).HasName("PK__Departme__B2079BCDD41290D7");
+            entity.HasKey(e => e.DepartmentId).HasName("PK__Departme__B2079BCD3FD636D4");
 
             entity.Property(e => e.DepartmentId).HasColumnName("DepartmentID");
             entity.Property(e => e.DepartmentName)
@@ -39,7 +39,7 @@ public partial class HrAdminContext : DbContext
 
         modelBuilder.Entity<DepartmentEmployee>(entity =>
         {
-            entity.HasKey(e => e.DepartmentEmployeeId).HasName("PK__Departme__CA3A39034BACE055");
+            entity.HasKey(e => e.DepartmentEmployeeId).HasName("PK__Departme__CA3A390322619C50");
 
             entity.Property(e => e.DepartmentEmployeeId).HasColumnName("DepartmentEmployeeID");
             entity.Property(e => e.DepartmentId).HasColumnName("DepartmentID");
@@ -47,11 +47,11 @@ public partial class HrAdminContext : DbContext
 
             entity.HasOne(d => d.Department).WithMany(p => p.DepartmentEmployees)
                 .HasForeignKey(d => d.DepartmentId)
-                .HasConstraintName("FK__Departmen__Depar__3D5E1FD2");
+                .HasConstraintName("FK__Departmen__Depar__4D94879B");
 
             entity.HasOne(d => d.Employee).WithMany(p => p.DepartmentEmployees)
                 .HasForeignKey(d => d.EmployeeId)
-                .HasConstraintName("FK__Departmen__Emplo__3C69FB99");
+                .HasConstraintName("FK__Departmen__Emplo__4CA06362");
         });
 
         modelBuilder.Entity<Employee>(entity =>

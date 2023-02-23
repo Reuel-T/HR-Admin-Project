@@ -33,6 +33,7 @@ CREATE TABLE Employees -- TABLE FOR ALL EMPLOYEE INFO
 	EmployeeRole TINYINT NOT NULL,
 	EmployeeStatus BIT NOT NULL,
 	EmployeePassword VARCHAR(255) NOT NULL,
+	ManagerID INT
 )
 
 CREATE TABLE Departments -- TABLE FOR ALL DEPARTMENT INFO
@@ -46,7 +47,8 @@ CREATE TABLE DepartmentEmployees -- BRDIGE ENTITY BETWEEN EMPLOYEES AND DEPARTME
 (
 	DepartmentEmployeeID INT IDENTITY (1,1) PRIMARY KEY,
 	EmployeeID INT FOREIGN KEY REFERENCES Employees(EmployeeID),
-	DepartmentID INT FOREIGN KEY REFERENCES Departments(DepartmentID)
+	DepartmentID INT FOREIGN KEY REFERENCES Departments(DepartmentID),
+	DepartmentManager BIT NOT NULL --stores if the member of the department is a manager of the department
 )
 
 SELECT * FROM Employees
@@ -65,8 +67,8 @@ INSERT INTO Departments VALUES
 
 INSERT INTO DepartmentEmployees VALUES
 (
-	0,10
+	0,10,1
 )
 
-ALTER TABLE Employees
-ADD ManagerID INT;
+DROP TABLE DepartmentEmployees
+DROP TABLE Departments
