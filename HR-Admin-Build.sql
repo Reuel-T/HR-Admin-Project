@@ -6,7 +6,7 @@ CREATE DATABASE [HR-ADMIN]
 	Last Name
 	Telephone Number
 	Email Address
-	Employee Manager (Role, Bool?)
+	Employee Manager (Another Employee)
 	Status
 	Password
 */
@@ -32,7 +32,7 @@ CREATE TABLE Employees -- TABLE FOR ALL EMPLOYEE INFO
 	EmployeeEmailAddress VARCHAR(64) UNIQUE NOT NULL,
 	EmployeeRole TINYINT NOT NULL,
 	EmployeeStatus BIT NOT NULL,
-	EmployeePassword VARCHAR(255) NOT NULL
+	EmployeePassword VARCHAR(255) NOT NULL,
 )
 
 CREATE TABLE Departments -- TABLE FOR ALL DEPARTMENT INFO
@@ -52,3 +52,21 @@ CREATE TABLE DepartmentEmployees -- BRDIGE ENTITY BETWEEN EMPLOYEES AND DEPARTME
 SELECT * FROM Employees
 SELECT * FROM Departments
 SELECT * FROM DepartmentEmployees
+
+INSERT INTO Employees VALUES 
+(
+	'admin','user','000000000','hradmin@test.com','0',1,'TestPass1234'
+)
+
+INSERT INTO Departments VALUES
+(
+	'Admin',1
+)
+
+INSERT INTO DepartmentEmployees VALUES
+(
+	0,10
+)
+
+ALTER TABLE Employees
+ADD ManagerID INT;

@@ -11,6 +11,7 @@ namespace Hr_API.ViewModels
         public string Email { get; set; } = string.Empty;
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
+        public string? TelephoneNumber { get; set; } = string.Empty;
         public int Role { get; set; } = 2;
         public int? ManagerId { get; set; }
         public string? ManagerName { get; set; }

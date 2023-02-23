@@ -12,9 +12,7 @@ public partial class DepartmentEmployee
 
     public int? DepartmentId { get; set; }
 
-    [JsonIgnore]
     public virtual Department? Department { get; set; }
 
-    [JsonIgnore]
     public virtual Employee? Employee { get; set; }
 }

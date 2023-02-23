@@ -55,3 +55,18 @@ Once done, run
 ```ps
 npm run dev
 ```
+
+# Features
+
+- [x] Add Employees
+- [ ] Edit Employees
+- [ ] List Employees
+- [ ] Add Departments
+- [ ] List Departments
+
+- [ ] Employees can belong to multiple departments
+- [ ] Managers can manage multiple departments
+
+- [ ] Employees can only view their own data
+- [ ] Managers can see all employees in their departments
+- [ ] Only HR Admins can change the Manager or Status of an Employee

@@ -9,15 +9,23 @@ namespace Hr_API.ViewModels
 {
     public class ModelHelper
     {
-        public UserModel UserDBOtoVM(Employee e)
+        public UserModel UserDBOtoVM(Employee e, Employee? manager)
         {
+            //get info from db object
             UserModel u = new UserModel{
                 FirstName = e.EmployeeFirstName,
                 LastName = e.EmployeeSurname,
-                Status = e.EmployeeStatus,
-                Role = e.EmployeeRole,
+                TelephoneNumber = e.EmployeeTelephoneNumber,
                 Email = e.EmployeeEmailAddress,
+                Role = e.EmployeeRole,
+                Status = e.EmployeeStatus,
+                ManagerId = e.ManagerId
             };
+
+            if (manager != null)
+            {
+                u.ManagerName = $"{manager.EmployeeFirstName} {manager.EmployeeSurname}";
+            }
 
             return u;
         }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Hr_API.Models;
+using Hr_API.ViewModels;
 
 namespace Hr_API.Controllers
 {
@@ -28,8 +29,10 @@ namespace Hr_API.Controllers
           {
               return NotFound();
           }
+
+          var ctx = await _context.Employees.Include(x => x.DepartmentEmployees).ThenInclude(x => x.Department).ToListAsync();
             //include department info
-            return await _context.Employees.Include(x => x.DepartmentEmployees).ThenInclude(x => x.Department).ToListAsync();
+            return ctx;
         }
 
         // GET: api/Employee/5
@@ -84,16 +87,45 @@ namespace Hr_API.Controllers
         // POST: api/Employee
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Employee>> PostEmployee(Employee employee)
+        public async Task<ActionResult<Employee>> PostEmployee(CreateEmployeeModel employeeIn)
         {
-          if (_context.Employees == null)
-          {
-              return Problem("Entity set 'HrAdminContext.Employees'  is null.");
-          }
-            _context.Employees.Add(employee);
-            await _context.SaveChangesAsync();
+            //generated code, I don't see a reason to change this
+            if (_context.Employees == null)
+            {
+                return Problem("Entity set 'HrAdminContext.Employees'  is null.");
+            }
 
-            return CreatedAtAction("GetEmployee", new { id = employee.EmployeeId }, employee);
+            //check to see if there is an existing employee with this email address
+            Employee e = await _context.Employees.Where(x => x.EmployeeEmailAddress.Trim().Equals(employeeIn.EmailAddress)).FirstOrDefaultAsync();
+
+            //if the email is available, go on and create
+            if (e == null)
+            {
+                Employee newEmp = new Employee
+                {
+                    EmployeeFirstName = employeeIn.FirstName.Trim(),
+                    EmployeeSurname = employeeIn.LastName.Trim(),
+                    EmployeeEmailAddress = employeeIn.EmailAddress.Trim(),
+                    EmployeeTelephoneNumber = employeeIn.TelephoneNumber.Trim(),
+                    EmployeePassword = "Password123#",
+                    EmployeeRole = 2
+                };
+
+                //if we're assigning a manager to the employee
+                if(employeeIn.ManagerID != null)
+                {
+                    newEmp.ManagerId = employeeIn.ManagerID.Value;
+                }
+
+                //add to the db
+                _context.Employees.Add(newEmp);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction("GetEmployee", new { id = newEmp.EmployeeId }, newEmp);
+            }else
+            {
+                return Unauthorized("Unable to Create Employee");
+            }
         }
 
         // DELETE: api/Employee/5
