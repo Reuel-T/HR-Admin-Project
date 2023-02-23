@@ -61,7 +61,7 @@ npm run dev
 - [x] Add Employees
 - [ ] Edit Employees
 - [ ] List Employees
-- [ ] Add Departments
+- [x] Add Departments
 - [ ] List Departments
 
 - [ ] Employees can belong to multiple departments

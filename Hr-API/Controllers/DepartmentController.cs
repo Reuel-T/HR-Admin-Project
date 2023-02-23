@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Hr_API.Models;
+using Hr_API.ViewModels;
 
 namespace Hr_API.Controllers
 {
@@ -76,23 +77,28 @@ namespace Hr_API.Controllers
                     throw;
                 }
             }
-
             return NoContent();
         }
 
         // POST: api/Department
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Department>> PostDepartment(Department department)
+        public async Task<ActionResult<Department>> PostDepartment(CreateDepartmentViewModel department)
         {
           if (_context.Departments == null)
           {
               return Problem("Entity set 'HrAdminContext.Departments'  is null.");
           }
-            _context.Departments.Add(department);
+            Department newDep = new Department
+            {
+                DepartmentName = department.DepartmentName,
+                DepartmentStatus = false,
+            };
+
+            _context.Departments.Add(newDep);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetDepartment", new { id = department.DepartmentId }, department);
+            return CreatedAtAction("GetDepartment", new { id = newDep.DepartmentId }, newDep);
         }
 
         // DELETE: api/Department/5

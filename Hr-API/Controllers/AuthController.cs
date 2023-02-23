@@ -34,8 +34,6 @@ namespace Hr_API.Controllers
                     return Unauthorized("Unable to log in");
                 }else
                 {
-                    
-
                     return Ok(e);
                 }
             }
