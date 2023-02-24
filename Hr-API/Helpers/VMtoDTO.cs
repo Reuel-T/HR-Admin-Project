@@ -11,22 +11,22 @@ namespace Hr_API.Helpers
     {
         public static Employee EmployeeEdit(EditEmployeeVM vm, Employee e)
         {
-            if (vm.FirstName != null || !vm.FirstName.Equals(string.Empty))
+            if (vm.FirstName != null)
             {
                 e.EmployeeFirstName = vm.FirstName;
             }
 
-            if(vm.LastName != null || vm.LastName.Equals(string.Empty))
+            if(vm.LastName != null)
             {
                 e.EmployeeSurname = vm.LastName;
             }
 
-            if(vm.TelephoneNumber != null || vm.TelephoneNumber.Equals(string.Empty))
+            if(vm.TelephoneNumber != null)
             {
                 e.EmployeeTelephoneNumber = vm.TelephoneNumber;
             }
 
-            if(vm.EmailAddress != null || vm.EmailAddress.Equals(string.Empty))
+            if(vm.EmailAddress != null)
             {
                 e.EmployeeEmailAddress = vm.EmailAddress;
             }
@@ -41,12 +41,12 @@ namespace Hr_API.Helpers
                 e.EmployeeStatus = vm.Status.Value;
             }
 
-            if(vm.Password != null || vm.Password.Equals(string.Empty))
+            if(vm.Password != null)
             {
                 e.EmployeePassword = vm.Password;
             }
 
-            if (vm.ManagerID != null || vm.ManagerID.Equals(string.Empty));
+            if (vm.ManagerID != null)
             {
                 if (int.TryParse(vm.ManagerID, out int newManagerID))
                 {

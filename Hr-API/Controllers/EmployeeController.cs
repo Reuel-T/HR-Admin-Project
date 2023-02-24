@@ -75,7 +75,6 @@ namespace Hr_API.Controllers
         // PUT: api/Employee/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        [Route("/api/Employee/UpdateEmployee")]
         public async Task<IActionResult> PutEmployee(int id, EditEmployeeVM employee)
         {
             if (id != employee.ID)
@@ -98,8 +97,9 @@ namespace Hr_API.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+                return Ok(e);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException err)
             {
                 if (!EmployeeExists(id))
                 {
@@ -107,11 +107,9 @@ namespace Hr_API.Controllers
                 }
                 else
                 {
-                    throw;
+                    return BadRequest($"Server Broke {err.Message}");
                 }
             }
-
-            return NoContent();
         }
 
         // POST: api/Employee
