@@ -29,7 +29,6 @@ namespace Hr_API.Helpers
                 result.ManagerName = $"{employee.EmployeeManager.EmployeeFirstName} {employee.EmployeeManager.EmployeeSurname}";
             }
 
-
             //use this to check if the employee is assigned to departments
             var department = employee.DepartmentEmployees;
 

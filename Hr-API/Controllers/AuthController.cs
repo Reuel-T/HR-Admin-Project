@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Hr_API.ViewModels;
 using Hr_API.Models;
+using Hr_API.Helpers;
 
 namespace Hr_API.Controllers
 {
@@ -25,8 +26,11 @@ namespace Hr_API.Controllers
         {
             try
             {
-                Employee e = await _context.Employees
+                var e = await _context.Employees
                     .Where(x => x.EmployeeEmailAddress.Equals(l.Username) && x.EmployeePassword.Equals(l.Password))
+                    .Include(x => x.EmployeeManager)
+                    .Include(x => x.DepartmentEmployees)
+                    .ThenInclude(x => x.Department)
                     .FirstOrDefaultAsync();
 
                 if (e == null)
@@ -34,7 +38,7 @@ namespace Hr_API.Controllers
                     return Unauthorized("Unable to log in");
                 }else
                 {
-                    return Ok(e);
+                    return Ok(DTOtoVM.EmployeeVM(e));
                 }
             }
             catch (System.Exception)
