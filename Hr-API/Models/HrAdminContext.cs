@@ -29,7 +29,7 @@ public partial class HrAdminContext : DbContext
     {
         modelBuilder.Entity<Department>(entity =>
         {
-            entity.HasKey(e => e.DepartmentId).HasName("PK__Departme__B2079BCD3FD636D4");
+            entity.HasKey(e => e.DepartmentId).HasName("PK__Departme__B2079BCDC7210B45");
 
             entity.Property(e => e.DepartmentId).HasColumnName("DepartmentID");
             entity.Property(e => e.DepartmentName)
@@ -39,7 +39,7 @@ public partial class HrAdminContext : DbContext
 
         modelBuilder.Entity<DepartmentEmployee>(entity =>
         {
-            entity.HasKey(e => e.DepartmentEmployeeId).HasName("PK__Departme__CA3A390322619C50");
+            entity.HasKey(e => e.DepartmentEmployeeId).HasName("PK__Departme__CA3A3903B56CE095");
 
             entity.Property(e => e.DepartmentEmployeeId).HasColumnName("DepartmentEmployeeID");
             entity.Property(e => e.DepartmentId).HasColumnName("DepartmentID");
@@ -47,18 +47,18 @@ public partial class HrAdminContext : DbContext
 
             entity.HasOne(d => d.Department).WithMany(p => p.DepartmentEmployees)
                 .HasForeignKey(d => d.DepartmentId)
-                .HasConstraintName("FK__Departmen__Depar__4D94879B");
+                .HasConstraintName("FK__Departmen__Depar__571DF1D5");
 
             entity.HasOne(d => d.Employee).WithMany(p => p.DepartmentEmployees)
                 .HasForeignKey(d => d.EmployeeId)
-                .HasConstraintName("FK__Departmen__Emplo__4CA06362");
+                .HasConstraintName("FK__Departmen__Emplo__5629CD9C");
         });
 
         modelBuilder.Entity<Employee>(entity =>
         {
-            entity.HasKey(e => e.EmployeeId).HasName("PK__Employee__7AD04FF14B198029");
+            entity.HasKey(e => e.EmployeeId).HasName("PK__Employee__7AD04FF106D739C0");
 
-            entity.HasIndex(e => e.EmployeeEmailAddress, "UQ__Employee__EA4E01BAAF6D5C33").IsUnique();
+            entity.HasIndex(e => e.EmployeeEmailAddress, "UQ__Employee__EA4E01BA0372E97A").IsUnique();
 
             entity.Property(e => e.EmployeeId).HasColumnName("EmployeeID");
             entity.Property(e => e.EmployeeEmailAddress)
@@ -67,6 +67,7 @@ public partial class HrAdminContext : DbContext
             entity.Property(e => e.EmployeeFirstName)
                 .HasMaxLength(64)
                 .IsUnicode(false);
+            entity.Property(e => e.EmployeeManagerId).HasColumnName("EmployeeManagerID");
             entity.Property(e => e.EmployeePassword)
                 .HasMaxLength(255)
                 .IsUnicode(false);
@@ -76,7 +77,10 @@ public partial class HrAdminContext : DbContext
             entity.Property(e => e.EmployeeTelephoneNumber)
                 .HasMaxLength(20)
                 .IsUnicode(false);
-            entity.Property(e => e.ManagerId).HasColumnName("ManagerID");
+
+            entity.HasOne(d => d.EmployeeManager).WithMany(p => p.InverseEmployeeManager)
+                .HasForeignKey(d => d.EmployeeManagerId)
+                .HasConstraintName("FK__Employees__Emplo__5165187F");
         });
 
         OnModelCreatingPartial(modelBuilder);

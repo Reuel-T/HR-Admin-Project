@@ -33,7 +33,7 @@ CREATE TABLE Employees -- TABLE FOR ALL EMPLOYEE INFO
 	EmployeeRole TINYINT NOT NULL,
 	EmployeeStatus BIT NOT NULL,
 	EmployeePassword VARCHAR(255) NOT NULL,
-	ManagerID INT
+	EmployeeManagerID INT FOREIGN KEY REFERENCES Employees(EmployeeID) --Self Reference on Manager
 )
 
 CREATE TABLE Departments -- TABLE FOR ALL DEPARTMENT INFO
@@ -65,10 +65,16 @@ INSERT INTO Departments VALUES
 	'Admin',1
 )
 
+
 INSERT INTO DepartmentEmployees VALUES
 (
 	0,10,1
 )
 
+
+SELECT * FROM DepartmentEmployees WHERE EmployeeID = 1
+
+
 DROP TABLE DepartmentEmployees
+DROP TABLE Employees
 DROP TABLE Departments

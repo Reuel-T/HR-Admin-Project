@@ -56,17 +56,20 @@ Once done, run
 npm run dev
 ```
 
-# Features
+# API Features
 
 - [x] Add Employees
 - [ ] Edit Employees
 - [ ] List Employees
+- [ ] List Employees Filterable by Department, Status
 - [x] Add Departments
-- [ ] List Departments
+- [x] List Departments
+- [ ] List Departments Filterable by Status
 
-- [ ] Employees can belong to multiple departments
-- [ ] Managers can manage multiple departments
+- [x] Employees can belong to multiple departments
+- [x] Employees can have a personal manager
+- [x] Managers can manage multiple departments
 
-- [ ] Employees can only view their own data
+- [ ] Employees can only view/edit their own data
 - [ ] Managers can see all employees in their departments
 - [ ] Only HR Admins can change the Manager or Status of an Employee

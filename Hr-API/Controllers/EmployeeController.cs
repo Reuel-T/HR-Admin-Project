@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Hr_API.Models;
 using Hr_API.ViewModels;
+using Hr_API.Helpers;
 
 namespace Hr_API.Controllers
 {
@@ -23,47 +24,76 @@ namespace Hr_API.Controllers
 
         // GET: api/Employee
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
+        public async Task<ActionResult<IEnumerable<EmployeeVM>>> GetEmployees()
         {
-          if (_context.Employees == null)
-          {
-              return NotFound();
-          }
+            if (_context.Employees == null)
+            {
+                return NotFound();
+            }
+            List<EmployeeVM> result = new List<EmployeeVM>();
 
-          var ctx = await _context.Employees.Include(x => x.DepartmentEmployees).ThenInclude(x => x.Department).ToListAsync();
-            //include department info
-            return ctx;
+            var employees = await _context.Employees
+                .Include(x => x.EmployeeManager)
+                .ToListAsync();
+
+            employees.ForEach(employee =>
+            {
+                result.Add(DTOtoVM.EmployeeVM(employee));
+            });
+
+            return Ok(result);
         }
 
         // GET: api/Employee/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Employee>> GetEmployee(int id)
+        public async Task<ActionResult<EmployeeVM>> GetEmployee(int id)
         {
-          if (_context.Employees == null)
-          {
-              return NotFound();
-          }
-            var employee = await _context.Employees.FindAsync(id);
-
-            if (employee == null)
+            if (_context.Employees == null)
             {
                 return NotFound();
             }
 
-            return employee;
+            //include connected tables
+            var employee = await _context.Employees
+                .Include(x => x.EmployeeManager)
+                .Include(x => x.DepartmentEmployees)
+                .ThenInclude(x => x.Department)
+                .Where(x => x.EmployeeId == id).FirstOrDefaultAsync();
+
+            //if employee exists
+            if (employee == null)
+            {
+                return NotFound();
+            }else
+            {
+                EmployeeVM result = DTOtoVM.EmployeeVM(employee);
+
+                return Ok(result);
+            }
         }
 
         // PUT: api/Employee/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEmployee(int id, Employee employee)
+        [Route("/api/Employee/UpdateEmployee")]
+        public async Task<IActionResult> PutEmployee(int id, EditEmployeeVM employee)
         {
-            if (id != employee.EmployeeId)
+            if (id != employee.ID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(employee).State = EntityState.Modified;
+            var e = await _context.Employees.FindAsync(id);
+
+            //there is an employee to edit
+            if(e != null)
+            {
+                e = VMtoDTO.EmployeeEdit(employee, e);
+                _context.Entry(e).State = EntityState.Modified;
+            }else 
+            {
+                return BadRequest("id not found");
+            }
 
             try
             {
@@ -96,7 +126,9 @@ namespace Hr_API.Controllers
             }
 
             //check to see if there is an existing employee with this email address
-            Employee e = await _context.Employees.Where(x => x.EmployeeEmailAddress.Trim().Equals(employeeIn.EmailAddress)).FirstOrDefaultAsync();
+            var e = await _context.Employees
+                .Where(x => x.EmployeeEmailAddress.Trim().Equals(employeeIn.EmailAddress))
+                .FirstOrDefaultAsync();
 
             //if the email is available, go on and create
             if (e == null)
@@ -114,7 +146,7 @@ namespace Hr_API.Controllers
                 //if we're assigning a manager to the employee
                 if(employeeIn.ManagerID != null)
                 {
-                    newEmp.ManagerId = employeeIn.ManagerID.Value;
+                    newEmp.EmployeeManagerId = employeeIn.ManagerID.Value;
                 }
 
                 //add to the db

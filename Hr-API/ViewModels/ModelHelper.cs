@@ -19,7 +19,7 @@ namespace Hr_API.ViewModels
                 Email = e.EmployeeEmailAddress,
                 Role = e.EmployeeRole,
                 Status = e.EmployeeStatus,
-                ManagerId = e.ManagerId
+                ManagerId = e.EmployeeManagerId
             };
 
             if (manager != null)

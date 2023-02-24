@@ -21,7 +21,11 @@ public partial class Employee
 
     public string EmployeePassword { get; set; } = null!;
 
-    public int? ManagerId { get; set; }
+    public int? EmployeeManagerId { get; set; }
 
     public virtual ICollection<DepartmentEmployee> DepartmentEmployees { get; } = new List<DepartmentEmployee>();
+
+    public virtual Employee? EmployeeManager { get; set; }
+
+    public virtual ICollection<Employee> InverseEmployeeManager { get; } = new List<Employee>();
 }
