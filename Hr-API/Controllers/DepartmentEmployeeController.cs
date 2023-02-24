@@ -46,7 +46,7 @@ namespace Hr_API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> AddEmployeeToDepartment(int empID, int depID, bool manager)
         {
-            DepartmentEmployee de = await _context.DepartmentEmployees
+            var de = await _context.DepartmentEmployees
                 .Where(x => empID == x.EmployeeId && depID == x.DepartmentId)
                 .FirstOrDefaultAsync();
 

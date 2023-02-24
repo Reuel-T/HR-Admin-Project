@@ -57,7 +57,7 @@ SELECT * FROM DepartmentEmployees
 
 INSERT INTO Employees VALUES 
 (
-	'admin','user','000000000','hradmin@test.com','0',1,'TestPass1234'
+	'admin','user','000000000','hradmin@test.com',0,1,'TestPass1234', null
 )
 
 INSERT INTO Departments VALUES

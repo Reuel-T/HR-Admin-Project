@@ -23,6 +23,10 @@ namespace Hr_API.Controllers
         }
 
         // GET: api/Employee
+        /// <summary>
+        /// Get request that returns a list of employees
+        /// </summary>
+        /// <returns>A list of employee objects</returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EmployeeVM>>> GetEmployees()
         {
@@ -32,10 +36,12 @@ namespace Hr_API.Controllers
             }
             List<EmployeeVM> result = new List<EmployeeVM>();
 
+            //get all the employees and their managers
             var employees = await _context.Employees
                 .Include(x => x.EmployeeManager)
                 .ToListAsync();
 
+            //convert the database objetcs to a model for clients
             employees.ForEach(employee =>
             {
                 result.Add(DTOtoVM.EmployeeVM(employee));
@@ -45,6 +51,11 @@ namespace Hr_API.Controllers
         }
 
         // GET: api/Employee/5
+        /// <summary>
+        /// Method to return a single Employee object
+        /// </summary>
+        /// <param name="id">The ID of an employee to search for</param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<EmployeeVM>> GetEmployee(int id)
         {
@@ -74,6 +85,12 @@ namespace Hr_API.Controllers
 
         // PUT: api/Employee/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Method to Edit an employee
+        /// </summary>
+        /// <param name="id">Id of the employee to be updated</param>
+        /// <param name="employee">Object containing the data of the employee to be changed</param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEmployee(int id, EditEmployeeVM employee)
         {
@@ -87,6 +104,7 @@ namespace Hr_API.Controllers
             //there is an employee to edit
             if(e != null)
             {
+                //update using the helper method
                 e = VMtoDTO.EmployeeEdit(employee, e);
                 _context.Entry(e).State = EntityState.Modified;
             }else 
@@ -114,6 +132,11 @@ namespace Hr_API.Controllers
 
         // POST: api/Employee
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Method to add an employee to the database
+        /// </summary>
+        /// <param name="employeeIn">The data of the employee to be created</param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<Employee>> PostEmployee(CreateEmployeeModel employeeIn)
         {
@@ -154,7 +177,7 @@ namespace Hr_API.Controllers
                 return CreatedAtAction("GetEmployee", new { id = newEmp.EmployeeId }, newEmp);
             }else
             {
-                return Unauthorized("Unable to Create Employee");
+                return BadRequest("Unable to Create Employee");
             }
         }
 

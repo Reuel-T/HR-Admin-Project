@@ -63,6 +63,7 @@ npm run dev
 - [x] List Employees
 - [ ] List Employees Filterable by Department, Status
 - [x] Add Departments
+- [ ] Edit Departments
 - [x] List Departments
 - [ ] List Departments Filterable by Status
 
