@@ -59,8 +59,8 @@ npm run dev
 # API Features
 
 - [x] Add Employees
-- [ ] Edit Employees
-- [ ] List Employees
+- [x] Edit Employees
+- [x] List Employees
 - [ ] List Employees Filterable by Department, Status
 - [x] Add Departments
 - [x] List Departments
