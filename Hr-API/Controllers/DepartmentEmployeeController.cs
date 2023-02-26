@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Hr_API.Models;
+using Hr_API.ViewModels;
+using Hr_API.Helpers;
 
 namespace Hr_API.Controllers
 {
@@ -22,13 +24,42 @@ namespace Hr_API.Controllers
 
         // GET: api/DepartmentEmployee
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<DepartmentEmployee>>> GetDepartmentEmployees()
+        [Route("api/deptartment-employees")]
+        public async Task<ActionResult<IEnumerable<EmployeeVM>>> GetDepartmentEmployees(int deptID, bool? active)
         {
-          if (_context.DepartmentEmployees == null)
-          {
-              return NotFound();
-          }
-            return await _context.DepartmentEmployees.ToListAsync();
+            if (_context.DepartmentEmployees == null)
+            {
+                return NotFound();
+            }
+
+            //if department does not exist
+            if (await _context.Departments.FindAsync(deptID) == null)
+            {
+                return BadRequest($"Department with id - {deptID} cannot be found");
+            }
+
+            //get all employees within the department
+            List<DepartmentEmployee> ctx = await _context.DepartmentEmployees
+                .Where(x => x.DepartmentId == deptID)
+                .Include(x => x.Employee)
+                .ThenInclude(x => x.EmployeeManager).ToListAsync();
+
+
+            //if active has a value, filter by active
+            if (active.HasValue)
+            {
+                ctx = ctx.Where(x => x.Employee.EmployeeStatus == active.Value).ToList();
+            }
+
+            List<EmployeeVM> result = new List<EmployeeVM>();
+
+            //create list to be returned
+            ctx.ForEach(x => 
+            {
+                result.Add(DTOtoVM.EmployeeVM(x.Employee));
+            });
+
+            return result;
         }
 
         /// <summary>
@@ -73,7 +104,7 @@ namespace Hr_API.Controllers
                 _context.DepartmentEmployees.Add(newDe);
                 await _context.SaveChangesAsync();
 
-                return Ok(newDe);
+                return Ok($"Employee ID - {newDe.EmployeeId} is assigned to Department{newDe.DepartmentId} with manager role {newDe.DepartmentManager}");
             }else
             {
                 return(BadRequest("Employee is already assigned to this department"));

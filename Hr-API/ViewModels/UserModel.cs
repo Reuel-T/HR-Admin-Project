@@ -16,6 +16,6 @@ namespace Hr_API.ViewModels
         public int? ManagerId { get; set; }
         public string? ManagerName { get; set; }
         public bool Status { get; set; }
-        public List<DepartmentModel> Departments { get; set; } = new List<DepartmentModel>();
+        public List<DepartmentVM> Departments { get; set; } = new List<DepartmentVM>();
     }
 }

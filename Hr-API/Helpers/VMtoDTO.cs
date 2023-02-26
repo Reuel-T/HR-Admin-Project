@@ -9,6 +9,12 @@ namespace Hr_API.Helpers
 {
     public static class VMtoDTO
     {
+        /// <summary>
+        ///     Method to edit an employee using information from an EditEmployeeVM object
+        /// </summary>
+        /// <param name="vm">The EditEmployeeVM object</param>
+        /// <param name="e">The Employee to edit</param>
+        /// <returns>The updated employee object</returns>
         public static Employee EmployeeEdit(EditEmployeeVM vm, Employee e)
         {
             if (vm.FirstName != null)
@@ -55,6 +61,27 @@ namespace Hr_API.Helpers
             }
 
             return e;
+        }
+
+        /// <summary>
+        ///     Method to edit a department using information from an EditDepartmentVM object
+        /// </summary>
+        /// <param name="vm">The EditDepartmentVM object</param>
+        /// <param name="d">The Department to edit</param>
+        /// <returns>The updated department object</returns>
+        public static Department DepartmentEdit(EditDepartmentVM vm, Department d)
+        {
+            if(vm.DepartmentName != null)
+            {
+                d.DepartmentName = vm.DepartmentName;
+            }
+
+            if (vm.Status != null)
+            {
+                d.DepartmentStatus = vm.Status.Value;
+            }
+
+            return d;
         }
     }
 }

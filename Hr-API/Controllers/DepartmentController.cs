@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Hr_API.Models;
 using Hr_API.ViewModels;
+using Hr_API.Helpers;
 
 namespace Hr_API.Controllers
 {
@@ -23,13 +24,38 @@ namespace Hr_API.Controllers
 
         // GET: api/Department
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Department>>> GetDepartments()
+        public async Task<ActionResult<IEnumerable<DepartmentVM>>> GetDepartments(bool? status)
         {
-          if (_context.Departments == null)
-          {
-              return NotFound();
-          }
-            return await _context.Departments.ToListAsync();
+            if (_context.Departments == null)
+            {
+                return NotFound();
+            }
+
+            List<DepartmentVM> result = new List<DepartmentVM>();
+
+            if (status.HasValue)
+            { 
+                var ctx =  await _context.Departments.Where(x => x.DepartmentStatus == status).ToListAsync();
+
+                ctx.ForEach(x =>
+                {
+                    result.Add(DTOtoVM.DepartmentVM(x));
+                });
+
+                return result;
+
+            }else
+            {
+                var ctx =  await _context.Departments.ToListAsync();
+
+                ctx.ForEach(x =>
+                {
+                    result.Add(DTOtoVM.DepartmentVM(x));
+                });
+
+                return result;
+            }
+            
         }
 
         // GET: api/Department/5
@@ -53,14 +79,24 @@ namespace Hr_API.Controllers
         // PUT: api/Department/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDepartment(int id, Department department)
+        public async Task<IActionResult> PutDepartment(int id, EditDepartmentVM department)
         {
-            if (id != department.DepartmentId)
+            if (id != department.ID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(department).State = EntityState.Modified;
+            var d = await _context.Departments.FindAsync(id);
+
+            //there is a department to edit
+            if(d != null)
+            {
+                d = VMtoDTO.DepartmentEdit(department, d);
+                _context.Entry(d).State = EntityState.Modified;
+            }else
+            {
+                return BadRequest("id not found");
+            }
 
             try
             {
