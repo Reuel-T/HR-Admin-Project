@@ -7,6 +7,10 @@ The SQL file used to build the database is included.
 
 `HR-Admin-Build.sql`
 
+Database Diagram
+![image](https://user-images.githubusercontent.com/69512501/221414575-e1399946-5b07-418a-b33a-9bdd8fba4347.png)
+
+
 ## API
 The API needs the connection string of the database to be set using `appsettings.json`
 
