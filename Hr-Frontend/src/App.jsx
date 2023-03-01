@@ -1,22 +1,24 @@
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { CssBaseline } from "@mui/material";
+import { CssBaseline, Container } from "@mui/material";
 import Navbar from "./components/Navbar";
-import { useState } from "react";
+import Login from "./pages/Login";
+
+import { RouterProvider, createBrowserRouter, Outlet } from 'react-router-dom';
+import MainLayout from "./layout/MainLayout";
+
+
+
 
 function App() {
 
-  const darkTheme = createTheme({
-    palette: {
-      mode: 'dark',
-    },
-  });
-
   return (
     <>
-      <ThemeProvider theme={darkTheme}>
-        <CssBaseline/>
-        <Navbar/>
-      </ThemeProvider>
+      <RouterProvider router={router}>
+        <ThemeProvider theme={darkTheme}>
+          <CssBaseline/>
+          <MainLayout/>
+        </ThemeProvider>
+      </RouterProvider>
     </>
   )
 }

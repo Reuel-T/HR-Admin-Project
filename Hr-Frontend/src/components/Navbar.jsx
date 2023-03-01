@@ -4,15 +4,23 @@ import Typography from '@mui/material/Typography'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import Button from '@mui/material/Button';
+import { CssBaseline } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
-//import MenuIcon from '@mui/icons-material/Menu';
+import { useContext } from 'react';
+import UserContext from '../context/UserContext';
+import MenuIcon from '@mui/icons-material/Menu';
 
 function Navbar() {
+
+  const { user, setUser } = useContext(UserContext);
+
   return (
+    <>
+    <CssBaseline/>
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-{/*           <IconButton
+          <IconButton
             size="large"
             edge="start"
             color="inherit"
@@ -20,14 +28,16 @@ function Navbar() {
             sx={{ mr: 2 }}
           >
             <MenuIcon />
-          </IconButton> */}
+          </IconButton> 
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            HR Admin
-          </Typography>
+            {user && user.firstName}
+            {!user && <>HR Adminstration</>}
+          </Typography>  
           <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>
     </Box>
+    </>
   );
 }
     
