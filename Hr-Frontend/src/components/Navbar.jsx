@@ -1,4 +1,4 @@
-import { React } from 'react'
+import { React, useEffect } from 'react'
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography'
 import AppBar from '@mui/material/AppBar'
@@ -9,16 +9,24 @@ import IconButton from '@mui/material/IconButton';
 import { useContext } from 'react';
 import UserContext from '../context/UserContext';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Navbar() {
 
   const { user, updateUser } = useContext(UserContext);
+  const navigate = useNavigate()
 
   function logoutClickHandler(event) {
     event.preventDefault();
     updateUser(null);
+    navigate('/login');
   }
+
+  useEffect(() => {
+    if (!user) {
+      navigate('login');
+    }
+  },[user])
 
   return (
     <>

@@ -4,6 +4,8 @@ import apiClient from '../api/http';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
+import { LinearProgress } from '@mui/material';
+import { Box, width } from '@mui/system';
 
 function ListEmployeesPage(){
 
@@ -24,6 +26,7 @@ function ListEmployeesPage(){
         {
             onSuccess: (response) => {
 
+                //Function used to create a list suitable for the data grid
                 function convertEmployees(e) {
                     return {
                         id: e.employeeID,
@@ -64,14 +67,22 @@ function ListEmployeesPage(){
     })
 
     return (
-        <div style={{ marginTop:'8px', height: '800px', width: '100%' }}>
-            { employees.length > 0 &&
+        <>
+            {
+                isLoadingEmployees && 
+                <LinearProgress sx={{width: '100%', marginTop: 8}}/>
+            }
+            
+            <Box sx={{height: '65vh', width: '100%', marginTop: 8}}>
+            {employees.length > 0 &&
                 <DataGrid
+                sx={{marginTop : 8}}
                 columns={tableColumns}
                 rows={employees}
                 />
             }
-        </div>
+            </Box>
+        </>
     )
 }
 
