@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Container, Box } from '@mui/material'
 import TextField from '@mui/material/TextField';
 import Avatar from '@mui/material/Avatar';
@@ -9,23 +9,39 @@ import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import { useMutation } from 'react-query';
 import apiClient from '../api/http';
 import UserContext from '../context/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
     
     let loginData = null;
 
-    const { user, setUser } = useContext(UserContext);
+    const {user, updateUser} = useContext(UserContext);
+    const navigate = useNavigate();
+
+    function handleSubmit(event) {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        console.log({
+            email: data.get('Username'),
+            password: data.get('Password')
+        });
+        loginData = data;
+        try {
+            loginUser();
+        } catch (error) {
+            console.log(error);
+        }
+    }
     
     const { isLoading: isLoggingIn, mutate: loginUser } = useMutation(
-        async () => {
+         async ()  => {
             return await apiClient.post('/auth/login', loginData);
         },
         {
             onSuccess: ({data}) => {
                 let response = data
                 console.log(response);
-                setUser(response);
-                console.log(user);
+                updateUser(response);
             }
         },
         {
@@ -35,23 +51,16 @@ function Login() {
         }
     )
 
-    function handleSubmit(event) {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password')
-        });
-        loginData = data;
-        try {
-            loginUser();
-        } catch (error) {
-            console.log(error);
+    useEffect(() => {
+        console.log('use effect called');
+        console.log(user);
+        if (user !== null) {//redirect if the user is logged in. I wasted 6 hours, because of this
+            navigate('/user-info');
         }
-    }
+    }, [user]);
 
     return (
-      <>
+      <div>
         <CssBaseline/>  
         <Container sx={{width: '90%'}}>
             <Box
@@ -102,7 +111,7 @@ function Login() {
                 </Box>
             </Box>
         </Container>
-      </>
+      </div>
   )
 }
 

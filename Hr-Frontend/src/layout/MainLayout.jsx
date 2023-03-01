@@ -1,24 +1,40 @@
 import { Container, CssBaseline } from '@mui/material'
 import React, { useState } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, Route, Routes } from 'react-router-dom'
 import Navbar from '../components/Navbar'
-import UserContext from '../context/UserContext'
-
-
+import {UserProvider} from '../context/UserContext'
+import ListEmployeesPage from '../pages/ListEmployeesPage'
+import Login from '../pages/Login'
+import UserInfoPage from '../pages/UserInfoPage'
 
 function MainLayout() {
 
-  const [user, setUser] = useState(null)
-
   return (
     <>
-      <UserContext.Provider value={{ user, setUser }}>
+      <UserProvider>
         <CssBaseline/>
         <Navbar />
         <Container sx={{width : '90%'}}>
-          <Outlet/>
+          <Routes>
+            <Route
+              path='/'
+              element={<UserInfoPage/>}
+            />
+            <Route
+              path='/login'
+              element={<Login/>}
+            />
+            <Route
+              path='/user-info'
+              element={<UserInfoPage/>}
+            />
+            <Route
+              path='/employees'
+              element={<ListEmployeesPage/>}
+            />
+          </Routes>
         </Container>
-      </UserContext.Provider>
+      </UserProvider>
     </>
   )
 }

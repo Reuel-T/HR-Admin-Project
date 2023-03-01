@@ -1,28 +1,19 @@
 import { ThemeProvider, createTheme } from '@mui/material';
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter, BrowserRouter } from 'react-router-dom';
 import MainLayout from './layout/MainLayout';
 import Login from './pages/Login';
 import UserInfoPage from './pages/UserInfoPage';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 /**
- * This application use react-query. 
- * I want to avoid useEffect like the plague
+ * This application uses react-query. 
+ * I want to avoid useEffect as much as possible,
+ * react query seems to let you dodge using it a lot
  */
 const client = new QueryClient();
 
-/* Holds the routes for the application */
-const router = createBrowserRouter([
-  {
-    path: '/', element: <MainLayout />, children:
-      [
-        { path: '/', element: <UserInfoPage /> },
-        { path: '/login', element: <Login /> }
-      ]
-  },
-])
 
 /**
  * Sets the theme to dark mode
@@ -38,7 +29,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ThemeProvider theme={darkTheme}>
       <QueryClientProvider client={client}>
-        <RouterProvider router={router} />
+        <BrowserRouter>
+          <MainLayout/>
+        </BrowserRouter>
       </QueryClientProvider>
     </ThemeProvider>
   </React.StrictMode>,

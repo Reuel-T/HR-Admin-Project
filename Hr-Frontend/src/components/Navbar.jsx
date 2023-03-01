@@ -9,10 +9,16 @@ import IconButton from '@mui/material/IconButton';
 import { useContext } from 'react';
 import UserContext from '../context/UserContext';
 import MenuIcon from '@mui/icons-material/Menu';
+import { Link } from 'react-router-dom';
 
 function Navbar() {
 
-  const { user, setUser } = useContext(UserContext);
+  const { user, updateUser } = useContext(UserContext);
+
+  function logoutClickHandler(event) {
+    event.preventDefault();
+    updateUser(null);
+  }
 
   return (
     <>
@@ -33,7 +39,10 @@ function Navbar() {
             {user && user.firstName}
             {!user && <>HR Adminstration</>}
           </Typography>  
-          <Button color="inherit">Login</Button>
+
+          {user && <Link to='employees'><Button color="primary" variant='contained' >Employees</Button></Link>}
+          {user && <Button color="primary" variant='contained' onClick={logoutClickHandler}>Log Out</Button>}  
+          
         </Toolbar>
       </AppBar>
     </Box>
