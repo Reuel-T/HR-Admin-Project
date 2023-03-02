@@ -85,7 +85,7 @@ npm run dev
 - [x] List Departments
 - [x] View Own Info
 - [ ] Edit Own Info (except manager and status)
-- [ ] Add Employee
+- [x] Add Employee
 - [ ] Add Employee to Department
 - [ ] Add Personal Manager to Employee
 - [ ] Change Employee Status

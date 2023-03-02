@@ -24,12 +24,8 @@ function Navbar(props) {
   const navigate = useNavigate()
 
 
-
-  useEffect(() => {
-    if (!user) {
-      navigate('login');
-    }
-  }, [user])
+  //set the dependency on user, so that the nav updates depending on the user
+  useEffect(() => { }, [user]);
   
   function stringAvatar(name) {
     return {

@@ -1,4 +1,4 @@
-import { LinearProgress } from '@mui/material';
+import { LinearProgress, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useContext, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
@@ -13,6 +13,14 @@ function ListDepartmentsPage() {
   const [departments, updateDepartments] = useState([]);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    //check if the user is null, and redirect to login page
+    if (user === null || undefined) {
+        navigate('/login');
+    }
+    console.log(user)
+  },[user])
 
   const { isLoading: isLoadingDepartments, refecth: getDepartments } = useQuery('get-departments',
     async () => {
@@ -41,22 +49,17 @@ function ListDepartmentsPage() {
     {field: 'status', headerName: 'Status', width: 70, type: 'boolean'}
   ]
 
-  useEffect((user) => {
-    if (user === null) {
-      navigate('login');
-    }
-  })
-
   return (
     <>
+      <Typography variant='h3' sx={{marginTop: 8}}>Departments</Typography>
       {
         isLoadingDepartments &&
-        <LinearProgress sx={{width: '100%', marginTop: 8}}/>
+        <LinearProgress sx={{width: '100%', marginTop: 4}}/>
       }
-      <Box sx={{height: '65vh', width: '100%', marginTop: 8}}>
+      <Box sx={{height: '50vh', width: '100%', marginTop: 4}}>
       {departments.length > 0 &&
           <DataGrid
-          sx={{marginTop : 8}}
+          sx={{marginTop : 4}}
           columns={tableColumns}
           rows={departments}
           />

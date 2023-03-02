@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { Outlet, Route, Routes } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import {UserProvider} from '../context/UserContext'
+import AddEmployeePage from '../pages/AddEmployeePage'
 import ListDepartmentsPage from '../pages/ListDepartmentsPage'
 import ListEmployeesPage from '../pages/ListEmployeesPage'
 import Login from '../pages/Login'
@@ -36,6 +37,10 @@ function MainLayout() {
             <Route
               path='/departments'
               element={<ListDepartmentsPage/>}
+            />
+            <Route
+              path='/add-employee'
+              element={<AddEmployeePage/>}
             />
           </Routes>
         </Container>

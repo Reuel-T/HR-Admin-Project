@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
 import UserContext from '../context/UserContext';
 import apiClient from '../api/http';
 import { useQuery } from 'react-query';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
-import { LinearProgress } from '@mui/material';
+import { Button, LinearProgress, Stack, Typography } from '@mui/material';
 import { Box, width } from '@mui/system';
 
 function ListEmployeesPage(){
@@ -14,7 +14,15 @@ function ListEmployeesPage(){
     /**
      * Getting the user context
     */
-    const { user } = useContext(UserContext);
+    const { user, updateUser } = useContext(UserContext);
+
+    useEffect(() => {
+        //check if the user is null, and redirect to login page
+        if (user === null || undefined) {
+            navigate('/login');
+        }
+        console.log(user)
+    },[user])
    
     const navigate = useNavigate();
 
@@ -56,24 +64,45 @@ function ListEmployeesPage(){
         {field: 'lastName', headerName: 'Last Name', width: 130},
         {field: 'emailAddress', headerName: 'Email Address', width: 130},
         {field: 'managerName', headerName: 'Manager Name', width: 130},
-        {field: 'status', headerName: 'Status', width: 70, type:'boolean'},
+        { field: 'status', headerName: 'Status', width: 70, type: 'boolean' },
+        {
+            field: 'action',
+            headerName: 'Actions',
+            sortable: false,
+            width: 210,
+            renderCell: (params) => {
+                const onClick = (e) => {
+                    e.stopPropagation(); // don't select this row after clicking
+            
+                    const api = params.api;
+                    const thisRow = {};
+            
+                    api
+                      .getAllColumns()
+                      .filter((c) => c.field !== "__check__" && !!c)
+                      .forEach(
+                        (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
+                      );
+            
+                    return alert(JSON.stringify(thisRow, null, 4));
+                };
+                return <Button variant='outlined' onClick={onClick}>This is a button</Button>
+            }
+        }
     ]
         
-    useEffect((user) => {
-        //check if the user is null, and redirect to login page
-        if (user === null) {
-            navigate('/login');
-        }
-    })
+    
 
     return (
         <>
+            <Typography variant='h3' sx={{marginTop: 8}}>Employees</Typography>
+
             {
                 isLoadingEmployees && 
                 <LinearProgress sx={{width: '100%', marginTop: 8}}/>
             }
             
-            <Box sx={{height: '65vh', width: '100%', marginTop: 8}}>
+            <Box sx={{height: '50vh', width: '100%', marginTop: 2}}>
             {employees.length > 0 &&
                 <DataGrid
                 sx={{marginTop : 8}}
@@ -81,6 +110,11 @@ function ListEmployeesPage(){
                 rows={employees}
                 />
             }
+            </Box>
+            <Box sx={{ marginTop: 4 }}>
+                <Link to='/add-employee'>
+                    <Button variant='contained'>Add Employee</Button>
+                </Link>
             </Box>
         </>
     )
