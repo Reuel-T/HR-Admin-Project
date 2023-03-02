@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react'
-import { Container, Box } from '@mui/material'
+import { Container, Box, Paper } from '@mui/material'
 import TextField from '@mui/material/TextField';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -70,7 +70,15 @@ function Login() {
                 flexDirection: 'column',
                 alignItems: 'center',
             }}
-            >
+                >
+                    <Paper elevation={3}
+                        sx={{
+                            padding: 8,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
                 <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
                     <AccountCircleRoundedIcon />
                 </Avatar>
@@ -109,6 +117,7 @@ function Login() {
                         Sign In
                     </Button>
                 </Box>
+                </Paper>
             </Box>
         </Container>
       </div>

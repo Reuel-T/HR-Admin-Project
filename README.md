@@ -10,6 +10,7 @@ The SQL file used to build the database is included.
 Database Diagram
 ![Database Diagram](https://user-images.githubusercontent.com/69512501/221414575-e1399946-5b07-418a-b33a-9bdd8fba4347.png)
 
+#
 
 ## API
 The API needs the connection string of the database to be set using `appsettings.json`
@@ -62,7 +63,7 @@ You can open http://localhost:5252/index.html in your browser to view the Swagge
 - [x] Employees can have a personal manager
 - [x] Managers can manage multiple departments
 
-
+#
 
 ## Frontend
 To setup the frontend, run (From the root directory)
@@ -76,3 +77,19 @@ Once done, run
 ```ps
 npm run dev
 ```
+
+### Frontend Features
+
+- [x] Login with email and password
+- [x] List Employees
+- [x] List Departments
+- [x] View Own Info
+- [ ] Edit Own Info (except manager and status)
+- [ ] Add Employee
+- [ ] Add Employee to Department
+- [ ] Add Personal Manager to Employee
+- [ ] Change Employee Status
+- [ ] Add Department
+- [ ] Change Department Status
+- [ ] List Employees of Department
+- [ ] If Manager, view own departments and their employees

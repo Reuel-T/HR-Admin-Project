@@ -20,8 +20,8 @@ function ListEmployeesPage(){
 
     const { isLoading: isLoadingEmployees, refetch: getEmployees } = useQuery('get-employees',
 
-         () => {
-            return apiClient.get('/api/employee')
+        async () => {
+            return await apiClient.get('/api/employee')
         },
         {
             onSuccess: (response) => {

@@ -1,8 +1,8 @@
 import React, { useEffect, useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Typography from '@mui/material/Typography'
 import UserContext from '../context/UserContext';
-import { Box, Card } from '@mui/material';
+import { Box, Card, Button, Paper } from '@mui/material';
 import { padding } from '@mui/system';
 
 
@@ -10,7 +10,7 @@ function UserInfoPage() {
     /**
      * Getting the user context
     */
-    const { user } = useContext(UserContext);
+    const { user, updateUser } = useContext(UserContext);
    
     const navigate = useNavigate();
     
@@ -20,6 +20,12 @@ function UserInfoPage() {
             navigate('/login');
         }
     })
+
+    function handleLogoutClick(event) {
+        event.preventDefault();
+        updateUser(null);
+        navigate('/login');
+    }
 
     return (
         <>
@@ -31,7 +37,9 @@ function UserInfoPage() {
                     flexDirection: 'column',
                     alignItems: 'center',
                 }}>
-                    <Card sx={{
+                    <Paper
+                        elevation={6}
+                        sx={{
                         padding: 8,
                         width: '100%'
                     }}>
@@ -48,7 +56,10 @@ function UserInfoPage() {
                                 <Typography key={department.departmentID} variant="h5">{ `${department.departmentID} ${department.departmentName}` }</Typography>
                             )
                         }
-                    </Card>
+                        <Button onClick={handleLogoutClick} variant="contained" >
+                            Logout
+                        </Button>
+                    </Paper>
                 </Box>
             }
         </>
