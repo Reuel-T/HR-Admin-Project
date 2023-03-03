@@ -1,16 +1,15 @@
-import { Avatar, Box, CssBaseline, Paper, TextField, Typography, Button, Alert, IconButton } from '@mui/material'
-import React, { useEffect, useState } from 'react'
-import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
-import { Container } from '@mui/system';
+import { CssBaseline, Container, Box, Paper, Avatar, Typography, Button, Collapse, Alert, IconButton, TextField } from '@mui/material';
+import React from 'react'
+import { useState } from 'react';
 import { useMutation } from 'react-query';
 import apiClient from '../api/http';
+import CasesRoundedIcon from '@mui/icons-material/CasesRounded';
 import CloseIcon from '@mui/icons-material/Close';
-import Collapse from '@mui/material/Collapse';
 
-function AddEmployeePage() {
+function AddDepartmentPage() {
+    let createDepartmentData = null;
 
-    let createUserData = null;
-    const [createdUsername, updateCreatedUsername] = useState(null);
+    const [createdDepartmentName, updateCreatedDepartmentName] = useState(null);
 
     const [showAlertSuccess, updateShowAlertSuccess] = useState(false);
     const [showAlertFail, updateShowAlertFail] = useState(false);
@@ -18,27 +17,25 @@ function AddEmployeePage() {
     function handleSubmit(event) {
         event.preventDefault();
         updateShowAlertSuccess(false);
+
         const data = new FormData(event.currentTarget);
-        createUserData = {
-            firstName: data.get('firstName'),
-            lastName: data.get('lastName'),
-            emailAddress: data.get('emailAddress'),
-            telephoneNumber: data.get('telephoneNumber'),
-            managerID: null
-        };
-        updateCreatedUsername(data.get('emailAddress'));
+        createDepartmentData = {
+            departmentName: data.get('departmentName')
+        }
+        updateCreatedDepartmentName(data.get('departmentName'));
         try {
-            createUser();
+            createDepartment();
         } catch (error) {
             console.log(error);
             updateShowAlertFail(true);
         }
+
     }
 
-    const { isLoading: isCreatingUser, mutate: createUser } = useMutation(
+    const { isLoading: isCreatingDepartment, mutate: createDepartment } = useMutation(
         async () => {
-            console.log(createUserData);
-            return await apiClient.post('/api/Employee', createUserData);
+            console.log(createDepartmentData);
+            return await apiClient.post('/api/Department', createDepartmentData);
         },
         {
             onSuccess: ({ data }) => {
@@ -52,11 +49,11 @@ function AddEmployeePage() {
             }
         }
     )
-
+    
     return (
         <>
             <CssBaseline />
-            <Container sx={{ width: '90%' }}>
+            <Container width={{width: '90%'}}>
                 <Box
                     sx={{
                         marginTop: 8,
@@ -70,49 +67,22 @@ function AddEmployeePage() {
                             padding: 8,
                             display: 'flex',
                             flexDirection: 'column',
-                            alignItems: 'center',
-                        }}    
-                    >
+                            alignItems: 'center'
+                        }}>
                         <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-                            <AccountCircleRoundedIcon />
+                            <CasesRoundedIcon />
                         </Avatar>
-                        <Typography component="h1" variant="h5">
-                            Add Employee
+                        <Typography component='h1' variant='h5'>
+                            Add Department
                         </Typography>
                         <Box component='form' onSubmit={handleSubmit}>
                             <TextField
                                 margin='normal'
                                 required
                                 fullWidth
-                                id='firstName'
-                                label='First Name'
-                                name='firstName'
-                                autoFocus
-                            />
-                            <TextField
-                                margin='normal'
-                                fullWidth
-                                id='lastName'
-                                label='Last Name'
-                                name='lastName'
-                            />
-                            <TextField
-                                margin='normal'
-                                fullWidth
-                                id='emailAddress'
-                                label='Email Address'
-                                name='emailAddress'
-                                type='email'
-                                required
-                            />
-                            <TextField
-                                margin='normal'
-                                fullWidth
-                                required
-                                id='telephoneNumber'
-                                label='Telephone Number'
-                                name='telephoneNumber'
-                                type='tel'
+                                id='departmentName'
+                                label='Department Name'
+                                name='departmentName'
                             />
                             <Button
                                 type='submit'
@@ -120,35 +90,34 @@ function AddEmployeePage() {
                                 variant='contained'
                                 sx={{ mt: 3, mb: 2 }}
                             >
-                            Create Employee
+                                Create Department
                             </Button>
-                        </Box>  
-                    </Paper>     
+                        </Box>
+                    </Paper>
                 </Box>
-                <Box sx={{ width: '100%', marginTop : 8 }}>
+                <Box sx={{ width: '100%', marginTop: 8 }}>
                     <Collapse in={showAlertSuccess}>
                         <Alert
                             severity='success'
                             action=
                             {
                                 <IconButton
-                                aria-label="close"
-                                color="inherit"
-                                size="small"
-                                onClick={() => {
-                                    updateShowAlertSuccess(false);
-                                }}
+                                    aria-label='close'
+                                    color='inherit'
+                                    size='small'
+                                    onClick={() => {
+                                        updateShowAlertSuccess(false);
+                                    }}
                                 >
-                                <CloseIcon fontSize="inherit" />
+                                    <CloseIcon fontSize='inherit'/>
                                 </IconButton>
                             }
                             sx={{ mb: 2 }}
                         >
-                        {`Employee with Email Address ${createdUsername} successfully created`}
+                            {`Department with Name ${createdDepartmentName} successfully created`}
                         </Alert>
                     </Collapse>
-                </Box>
-                <Box sx={{ width: '100%', marginTop : 8 }}>
+                    <Box sx={{ width: '100%', marginTop : 8 }}>
                     <Collapse in={showAlertFail}>
                         <Alert
                             severity='error'
@@ -167,13 +136,14 @@ function AddEmployeePage() {
                             }
                             sx={{ mb: 2 }}
                         >
-                        {`Unable to create Employee with Email Address ${createdUsername}`}
+                        {`Unable to create Department with name ${createdDepartmentName}`}
                         </Alert>
                     </Collapse>
+                </Box>
                 </Box>
             </Container>
         </>
     )
 }
 
-export default AddEmployeePage
+export default AddDepartmentPage

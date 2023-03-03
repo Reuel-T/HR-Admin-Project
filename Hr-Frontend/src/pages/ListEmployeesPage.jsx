@@ -71,22 +71,21 @@ function ListEmployeesPage(){
             sortable: false,
             width: 210,
             renderCell: (params) => {
+                const thisRow = {};
+                const api = params.api; 
+                api
+                    .getAllColumns()
+                    .filter((c) => c.field !== "__check__" && !!c)
+                    .forEach(
+                    (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
+                    );
+                    //return alert(JSON.stringify(thisRow, null, 4));
                 const onClick = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
-            
-                    const api = params.api;
-                    const thisRow = {};
-            
-                    api
-                      .getAllColumns()
-                      .filter((c) => c.field !== "__check__" && !!c)
-                      .forEach(
-                        (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
-                      );
-            
-                    return alert(JSON.stringify(thisRow, null, 4));
                 };
-                return <Button variant='outlined' onClick={onClick}>This is a button</Button>
+                return (<>
+                    <Link to={`/employee/${thisRow.id}`}><Button variant='outlined'>View</Button></Link>
+                </>)
             }
         }
     ]
@@ -96,7 +95,6 @@ function ListEmployeesPage(){
     return (
         <>
             <Typography variant='h3' sx={{marginTop: 8}}>Employees</Typography>
-
             {
                 isLoadingEmployees && 
                 <LinearProgress sx={{width: '100%', marginTop: 8}}/>

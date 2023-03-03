@@ -1,8 +1,8 @@
-import { LinearProgress, Typography } from '@mui/material';
+import { Button, LinearProgress, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useContext, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import apiClient from '../api/http';
 import UserContext from '../context/UserContext';
 import { DataGrid } from '@mui/x-data-grid';
@@ -64,6 +64,11 @@ function ListDepartmentsPage() {
           rows={departments}
           />
       }
+      </Box>
+      <Box sx={{ marginTop: 4 }}>
+          <Link to='/add-department'>
+              <Button variant='contained'>Add Department</Button>
+          </Link>
       </Box>
     </>
   )

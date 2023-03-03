@@ -3,7 +3,10 @@ import React, { useState } from 'react'
 import { Outlet, Route, Routes } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import {UserProvider} from '../context/UserContext'
+import AddDepartmentPage from '../pages/AddDepartmentPage'
 import AddEmployeePage from '../pages/AddEmployeePage'
+import DepartmentPage from '../pages/DepartmentPage'
+import EmployeePage from '../pages/EmployeePage'
 import ListDepartmentsPage from '../pages/ListDepartmentsPage'
 import ListEmployeesPage from '../pages/ListEmployeesPage'
 import Login from '../pages/Login'
@@ -42,6 +45,13 @@ function MainLayout() {
               path='/add-employee'
               element={<AddEmployeePage/>}
             />
+            <Route
+              path='/add-department'
+              element={<AddDepartmentPage/>}
+            />
+            <Route
+              path='/employee/:id'
+              element={<EmployeePage />} />
           </Routes>
         </Container>
       </UserProvider>

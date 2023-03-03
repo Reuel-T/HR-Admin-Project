@@ -25,7 +25,6 @@ namespace Hr_API.Helpers
 
             if (employee.EmployeeManager != null)
             {
-                result.ManagerID = employee.EmployeeManager.EmployeeManagerId;
                 result.ManagerName = $"{employee.EmployeeManager.EmployeeFirstName} {employee.EmployeeManager.EmployeeSurname}";
             }
 
