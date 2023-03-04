@@ -88,7 +88,7 @@ npm run dev
 - [x] Add Employee (admin only)
 - [ ] Add Employee to Department (admin only)
 - [ ] Add Personal Manager to Employee (admin only)
-- [ ] Add Department (admin only)
+- [x] Add Department (admin only)
 - [ ] Change Department Status (admin only)
 - [ ] List Employees of Department (admin and manager)
 - [ ] If Manager, view own departments and their employees
