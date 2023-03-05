@@ -60,7 +60,7 @@ function Login() {
     }, [user]);
 
     return (
-      <div>
+      <>
         <CssBaseline/>  
         <Container sx={{width: '90%'}}>
             <Box
@@ -119,7 +119,7 @@ function Login() {
                 </Paper>
             </Box>
         </Container>
-      </div>
+      </>
   )
 }
 

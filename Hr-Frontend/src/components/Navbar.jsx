@@ -155,49 +155,5 @@ function Navbar(props) {
     </Box>)
 
 }
-    
-{/* (
-    <>
-    <CssBaseline/>
-    <Box sx={{ display: 'flex' }}>
-        <AppBar component="nav" position="fixed">
-          <Toolbar>
-              <IconButton
-                size='large'
-                edge='start'
-                color='inherit'
-                aria-label='open drawer'
-                sx={{ mr: 2 }}
-                onClick={handleDrawerToggle}
-              >
-                <MenuIcon/>
-              </IconButton>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                HR Administration
-              </Typography>
-              {
-                user && 
-                (<div>
-                  <Avatar {...stringAvatar(`${user.firstName} ${user.lastName}`)} />
-                </div>)
-              }
-            </Toolbar>
-        </AppBar>
-        <Box component='nav'>
-          <Drawer
-            container={container}
-            variant='temporary'
-            open={drawerOpen}
-            onClose={handleDrawerToggle}
-            sx={{
-              display: { xs: 'block', sm: 'none' },
-              '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-            }}>
-            {drawer}
-          </Drawer>
-        </Box>
-    </Box>
-    </>
-  );  */}
 
 export default Navbar

@@ -57,5 +57,13 @@ namespace Hr_API.Helpers
             };
         }
 
+        public static ManagerVM ManagerVM(Employee employee){
+            return new ManagerVM
+            {
+                ID = employee.EmployeeId,
+                name = $"{employee.EmployeeFirstName} {employee.EmployeeSurname}"
+            };
+        }
+
     }
 }

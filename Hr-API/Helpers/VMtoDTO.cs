@@ -56,7 +56,13 @@ namespace Hr_API.Helpers
             {
                 if (int.TryParse(vm.ManagerID, out int newManagerID))
                 {
-                    e.EmployeeManagerId = newManagerID;
+                    if(newManagerID ==-1)
+                    {
+                        e.EmployeeManagerId = null;
+                    }else
+                    {
+                        e.EmployeeManagerId = newManagerID;
+                    }
                 }
             }
 

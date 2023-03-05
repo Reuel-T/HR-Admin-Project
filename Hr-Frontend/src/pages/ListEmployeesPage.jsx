@@ -84,7 +84,8 @@ function ListEmployeesPage(){
                     e.stopPropagation(); // don't select this row after clicking
                 };
                 return (<>
-                    <Link to={`/employee/${thisRow.id}`}><Button variant='outlined'>View</Button></Link>
+                    <Link to={`/employee/${thisRow.id}`}><Button>View</Button></Link>
+                    <Link to={`/employee/edit/${thisRow.id}`}><Button>Edit</Button></Link>
                 </>)
             }
         }

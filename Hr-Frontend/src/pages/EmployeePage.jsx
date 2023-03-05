@@ -1,7 +1,7 @@
-import { Container, Box, Paper, Typography, Avatar, Divider, Stack } from '@mui/material';
+import { Container, Box, Paper, Typography, Avatar, Divider, Stack, Button } from '@mui/material';
 import React, { useState } from 'react'
 import { useQuery } from 'react-query';
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import apiClient from '../api/http';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
@@ -148,7 +148,10 @@ function EmployeePage() {
                                             </>    
                                     }
                                 </Box>    
-                            </Box>    
+                            </Box>
+                            <Link to={`/employee/edit/${id}`}>
+                                <Button variant='contained'>Edit Employee</Button>
+                            </Link>    
                         </Paper>
                     </Box>
                 </Container>

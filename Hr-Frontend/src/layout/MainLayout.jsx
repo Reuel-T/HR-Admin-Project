@@ -6,6 +6,7 @@ import {UserProvider} from '../context/UserContext'
 import AddDepartmentPage from '../pages/AddDepartmentPage'
 import AddEmployeePage from '../pages/AddEmployeePage'
 import DepartmentPage from '../pages/DepartmentPage'
+import EditEmployeePage from '../pages/EditEmployeePage'
 import EmployeePage from '../pages/EmployeePage'
 import ListDepartmentsPage from '../pages/ListDepartmentsPage'
 import ListEmployeesPage from '../pages/ListEmployeesPage'
@@ -52,6 +53,9 @@ function MainLayout() {
             <Route
               path='/employee/:id'
               element={<EmployeePage />} />
+            <Route
+              path='/employee/edit/:id'
+              element={<EditEmployeePage />} />
           </Routes>
         </Container>
       </UserProvider>

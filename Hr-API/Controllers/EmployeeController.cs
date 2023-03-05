@@ -181,6 +181,28 @@ namespace Hr_API.Controllers
             }
         }
 
+        //list all possible manager options for a specific user id
+        [HttpGet]
+        [Route("/api/employee-managers/{id}")]
+        public async Task<ActionResult<IEnumerable<ManagerVM>>> GetManagersForEmployee(int id){
+            var managers = await _context.Employees.Where(x => x.EmployeeId != id).ToListAsync();
+
+            List<ManagerVM> result = new List<ManagerVM>();
+
+            result.Add(new ManagerVM
+            {
+                ID = -1,
+                name = "Unmanaged"
+            });
+
+            managers.ForEach(x =>
+            {
+                result.Add(DTOtoVM.ManagerVM(x));
+            });
+
+            return Ok(result);
+        }
+
         // DELETE: api/Employee/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEmployee(int id)

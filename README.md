@@ -8,6 +8,7 @@ The SQL file used to build the database is included.
 `HR-Admin-Build.sql`
 
 Database Diagram
+
 ![Database Diagram](https://user-images.githubusercontent.com/69512501/221414575-e1399946-5b07-418a-b33a-9bdd8fba4347.png)
 
 #
@@ -84,11 +85,11 @@ npm run dev
 - [x] List Employees
 - [x] List Departments
 - [x] View Own Info
-- [ ] Edit Own Info (except manager and status)
-- [x] Add Employee (admin only)
-- [ ] Add Employee to Department (admin only)
-- [ ] Add Personal Manager to Employee (admin only)
-- [x] Add Department (admin only)
-- [ ] Change Department Status (admin only)
-- [ ] List Employees of Department (admin and manager)
+- [x] Edit Employee Data
+- [x] Add Employee
+- [ ] Add Employee to Department
+- [ ] Add Personal Manager to Employee
+- [x] Add Department
+- [ ] Change Department Status
+- [ ] List Employees of Department
 - [ ] If Manager, view own departments and their employees
