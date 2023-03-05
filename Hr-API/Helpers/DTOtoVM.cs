@@ -34,12 +34,12 @@ namespace Hr_API.Helpers
             //if the employee is assigned to any departments
             if (department.Count() != 0 || department != null)
             {
-                List<DepartmentVM> departments = new List<DepartmentVM>();
+                List<EmployeeDepartmentVM> departments = new List<EmployeeDepartmentVM>();
 
                 employee.DepartmentEmployees.ToList()
                     .ForEach(x =>
                     {
-                        departments.Add(DepartmentVM(x.Department));
+                        departments.Add(EmployeeDepartmentVM(x));
                     });
                 result.Departments = departments;
             }
@@ -54,6 +54,15 @@ namespace Hr_API.Helpers
                 DepartmentID = department.DepartmentId,
                 DepartmentName = department.DepartmentName,
                 DepartmentStatus = department.DepartmentStatus
+            };
+        }
+
+        public static EmployeeDepartmentVM EmployeeDepartmentVM(DepartmentEmployee departmentEmployee){
+            return new EmployeeDepartmentVM { 
+                id = departmentEmployee.DepartmentId.Value,
+                DepartmentName = departmentEmployee.Department.DepartmentName,
+                Status = departmentEmployee.Department.DepartmentStatus,
+                IsManager = departmentEmployee.DepartmentManager
             };
         }
 

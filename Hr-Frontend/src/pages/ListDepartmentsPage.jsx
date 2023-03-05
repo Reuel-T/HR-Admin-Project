@@ -46,7 +46,31 @@ function ListDepartmentsPage() {
   const tableColumns = [
     {field: 'id', headerName: 'ID', width: 70},
     {field: 'departmentName', headerName: 'Department', width: 130},
-    {field: 'status', headerName: 'Status', width: 70, type: 'boolean'}
+    { field: 'status', headerName: 'Status', width: 70, type: 'boolean' },
+    {
+      field: 'action',
+      headerName: 'Actions',
+      sortable: false,
+      width: 210,
+      renderCell: (params) => {
+          const thisRow = {};
+          const api = params.api; 
+          api
+              .getAllColumns()
+              .filter((c) => c.field !== "__check__" && !!c)
+              .forEach(
+              (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
+              );
+              //return alert(JSON.stringify(thisRow, null, 4));
+          const onClick = (e) => {
+              e.stopPropagation(); // don't select this row after clicking
+          };
+          return (<>
+              <Link to={`/department/${thisRow.id}`}><Button>View</Button></Link>
+              <Link to={`/department/edit/${thisRow.id}`}><Button>Edit</Button></Link>
+          </>)
+      }
+  }
   ]
 
   return (

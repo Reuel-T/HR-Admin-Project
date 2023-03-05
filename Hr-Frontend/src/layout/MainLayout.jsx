@@ -43,6 +43,10 @@ function MainLayout() {
               element={<ListDepartmentsPage/>}
             />
             <Route
+              path='/department/:id'
+              element={<DepartmentPage/>}
+            />
+            <Route
               path='/add-employee'
               element={<AddEmployeePage/>}
             />
