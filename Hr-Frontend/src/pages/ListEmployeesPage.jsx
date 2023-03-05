@@ -53,7 +53,7 @@ function ListEmployeesPage(){
                 console.log(employees);
             },
             onError: (response) => {
-                console.log(error);
+                console.log(response);
             }
         }
     )
@@ -71,21 +71,9 @@ function ListEmployeesPage(){
             sortable: false,
             width: 210,
             renderCell: (params) => {
-                const thisRow = {};
-                const api = params.api; 
-                api
-                    .getAllColumns()
-                    .filter((c) => c.field !== "__check__" && !!c)
-                    .forEach(
-                    (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
-                    );
-                    //return alert(JSON.stringify(thisRow, null, 4));
-                const onClick = (e) => {
-                    e.stopPropagation(); // don't select this row after clicking
-                };
                 return (<>
-                    <Link to={`/employee/${thisRow.id}`}><Button>View</Button></Link>
-                    <Link to={`/employee/edit/${thisRow.id}`}><Button>Edit</Button></Link>
+                    <Link to={`/employee/${params.row.id}`}><Button>View</Button></Link>
+                    <Link to={`/employee/edit/${params.row.id}`}><Button>Edit</Button></Link>
                 </>)
             }
         }

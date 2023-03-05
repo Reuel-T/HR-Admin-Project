@@ -88,8 +88,9 @@ npm run dev
 - [x] Edit Employee Data
 - [x] Add Employee
 - [ ] Add Employee to Department
-- [ ] Add Personal Manager to Employee
+- [x] Add Personal Manager to Employee
 - [x] Add Department
-- [ ] Change Department Status
-- [ ] List Employees of Department
+- [x] Edit Department
+- [x] Change Department Status
+- [x] List Employees of Department
 - [ ] If Manager, view own departments and their employees

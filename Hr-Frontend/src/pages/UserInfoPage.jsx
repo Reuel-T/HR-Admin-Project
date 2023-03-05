@@ -53,7 +53,7 @@ function UserInfoPage() {
                         {(user.departments.length > 0) && 
                             user.departments.map((department) =>
                             
-                                <Typography key={department.departmentID} variant="h5">{ `${department.departmentID} ${department.departmentName}` }</Typography>
+                                <Typography key={department.id} variant="h5">{ `${department.id} ${department.departmentName}` }</Typography>
                             )
                         }
                         <Button onClick={handleLogoutClick} variant="contained" >

@@ -24,8 +24,7 @@ namespace Hr_API.Controllers
 
         // GET: api/DepartmentEmployee
         [HttpGet]
-        [Route("api/deptartment-employees")]
-        public async Task<ActionResult<IEnumerable<EmployeeVM>>> GetDepartmentEmployees(int deptID, bool? active)
+        public async Task<ActionResult<IEnumerable<DepartmentEmployeeVM>>> GetDepartmentEmployees(int deptID, bool? active)
         {
             if (_context.DepartmentEmployees == null)
             {
@@ -42,7 +41,7 @@ namespace Hr_API.Controllers
             List<DepartmentEmployee> ctx = await _context.DepartmentEmployees
                 .Where(x => x.DepartmentId == deptID)
                 .Include(x => x.Employee)
-                .ThenInclude(x => x.EmployeeManager).ToListAsync();
+                .ToListAsync();
 
 
             //if active has a value, filter by active
@@ -51,12 +50,12 @@ namespace Hr_API.Controllers
                 ctx = ctx.Where(x => x.Employee.EmployeeStatus == active.Value).ToList();
             }
 
-            List<EmployeeVM> result = new List<EmployeeVM>();
+            List<DepartmentEmployeeVM> result = new List<DepartmentEmployeeVM>();
 
             //create list to be returned
             ctx.ForEach(x => 
             {
-                result.Add(DTOtoVM.EmployeeVM(x.Employee));
+                result.Add(DTOtoVM.DepartmentEmployeeVM(x));
             });
 
             return result;
@@ -158,6 +157,29 @@ namespace Hr_API.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> InvertDepartmentManager(int eID, int dID){
+
+            var employee = await _context.DepartmentEmployees
+                .Where(x => x.DepartmentId == dID && x.EmployeeId == eID)
+                .FirstOrDefaultAsync();
+
+            if (employee != null)
+            {
+                employee.DepartmentManager = !employee.DepartmentManager;
+                _context.Entry(employee).State = EntityState.Modified;
+
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }else
+            {
+                return BadRequest("Unable to find Employee to update");
+            }
+
+            
         }
 
         // POST: api/DepartmentEmployee

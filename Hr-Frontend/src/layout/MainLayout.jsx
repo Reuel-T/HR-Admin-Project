@@ -6,6 +6,7 @@ import {UserProvider} from '../context/UserContext'
 import AddDepartmentPage from '../pages/AddDepartmentPage'
 import AddEmployeePage from '../pages/AddEmployeePage'
 import DepartmentPage from '../pages/DepartmentPage'
+import EditDepartmentPage from '../pages/EditDepartmentPage'
 import EditEmployeePage from '../pages/EditEmployeePage'
 import EmployeePage from '../pages/EmployeePage'
 import ListDepartmentsPage from '../pages/ListDepartmentsPage'
@@ -45,6 +46,10 @@ function MainLayout() {
             <Route
               path='/department/:id'
               element={<DepartmentPage/>}
+            />
+            <Route
+              path='/department/edit/:id'
+              element={<EditDepartmentPage/>}
             />
             <Route
               path='/add-employee'

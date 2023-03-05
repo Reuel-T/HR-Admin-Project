@@ -53,7 +53,7 @@ function AddDepartmentPage() {
     return (
         <>
             <CssBaseline />
-            <Container width={{width: '90%'}}>
+            <Container sx={{width: '90%'}}>
                 <Box
                     sx={{
                         marginTop: 8,

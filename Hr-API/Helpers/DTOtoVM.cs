@@ -74,5 +74,17 @@ namespace Hr_API.Helpers
             };
         }
 
+        public static DepartmentEmployeeVM DepartmentEmployeeVM(DepartmentEmployee departmentEmployee){
+            return new DepartmentEmployeeVM
+            {
+                DepartmentId = departmentEmployee.DepartmentId.Value,
+                EmployeeId = departmentEmployee.EmployeeId.Value,
+                FirstName = departmentEmployee.Employee.EmployeeFirstName,
+                LastName = departmentEmployee.Employee.EmployeeSurname,
+                IsEmployeeActive = departmentEmployee.Employee.EmployeeStatus,
+                IsEmployeeManager = departmentEmployee.DepartmentManager
+            };
+        }
+
     }
 }

@@ -60,7 +60,7 @@ namespace Hr_API.Controllers
 
         // GET: api/Department/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Department>> GetDepartment(int id)
+        public async Task<ActionResult<DepartmentVM>> GetDepartment(int id)
         {
           if (_context.Departments == null)
           {
@@ -73,7 +73,9 @@ namespace Hr_API.Controllers
                 return NotFound();
             }
 
-            return department;
+            var departmentVM = DTOtoVM.DepartmentVM(department);
+
+            return departmentVM;
         }
 
         // PUT: api/Department/5
@@ -101,6 +103,7 @@ namespace Hr_API.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+                return Ok("Department Updated");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -113,7 +116,6 @@ namespace Hr_API.Controllers
                     throw;
                 }
             }
-            return NoContent();
         }
 
         // POST: api/Department
