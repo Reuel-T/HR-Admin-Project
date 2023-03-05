@@ -94,3 +94,4 @@ npm run dev
 - [x] Change Department Status
 - [x] List Employees of Department
 - [ ] If Manager, view own departments and their employees
+- [ ] User Role checking for routes
