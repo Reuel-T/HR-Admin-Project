@@ -2,3 +2,16 @@ Server=CHRIS;Initial Catalog=HR-ADMIN;Trusted_Connection=True;
 
 scaffold command
 dotnet ef dbcontext scaffold "Server=CHRIS;Initial Catalog=HR-ADMIN;Trusted_Connection=True;Encrypt=False" Microsoft.EntityFrameworkCore.SqlServer -o Models -f
+
+check routes
+
+employee page 
+-> Role SU, allow edits of all
+-> id === userId edits of all except manager and status
+
+list employee page
+-> only SUs can view
+
+list department page
+-> SUs and if user is department manager can view
+-> SUs can view actions

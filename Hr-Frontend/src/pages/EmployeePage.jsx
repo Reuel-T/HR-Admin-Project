@@ -129,22 +129,12 @@ function EmployeePage() {
                                                                 <Typography variant="body">{department.departmentName}</Typography>
                                                             </Box>
                                                         </Paper>
-                                                    )}
-                                                    <Paper sx={{flexGrow: 1, display:'flex', justifyContent:'center', alignItems:'center', height: 50, minWidth: 100}} >
-                                                        <Box sx={{p: 0}}>
-                                                            <AddRoundedIcon/>
-                                                        </Box>
-                                                    </Paper>    
+                                                    )}  
                                                 </Stack>
                                             </>
                                             :
                                             <>
                                                 <Typography variant='body'>Employee Does not Belong to any departments</Typography>
-                                                <Paper sx={{flexGrow: 1, display:'flex', justifyContent:'center', alignItems:'center', height: 50, minWidth: 100}} >
-                                                    <Box sx={{p: 0}}>
-                                                        <AddRoundedIcon/>
-                                                    </Box>
-                                                </Paper>  
                                             </>    
                                     }
                                 </Box>    
