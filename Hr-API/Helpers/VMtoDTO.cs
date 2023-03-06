@@ -89,5 +89,15 @@ namespace Hr_API.Helpers
 
             return d;
         }
+
+        public static DepartmentEmployee DepartmentEmployee(CreateDepartmentEmployeeVM vm)
+        {
+            return new DepartmentEmployee
+            {
+                DepartmentId = vm.departmentId,
+                EmployeeId = vm.employeeId,
+                DepartmentManager = false
+            };
+        }
     }
 }

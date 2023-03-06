@@ -1,4 +1,4 @@
-import { Box, Button, LinearProgress, Paper, Typography } from '@mui/material';
+import { Box, Button, FormControl, InputLabel, LinearProgress, MenuItem, Paper, Select, Typography } from '@mui/material';
 import { Container } from '@mui/system';
 import { DataGrid } from '@mui/x-data-grid';
 import React from 'react'
@@ -12,6 +12,9 @@ function DepartmentPage() {
   const { id } = useParams();
 
   const queryClient = useQueryClient();
+
+  //value for employee to add route
+  let employeeToAdd = null;
 
   //query for department employee info
   const departmentEmployeeQuery = useQuery({
@@ -31,6 +34,29 @@ function DepartmentPage() {
     }
   })
 
+  const employeesQuery = useQuery({
+    queryKey: ['get-employees'],
+    queryFn: getEmployees,
+    onSuccess: (response) => {
+      console.log(response.data);
+    },
+    onError: (response) => {
+      console.log(response.data);
+    }
+  })
+
+  const employeeDepartmentMutation = useMutation({
+    mutationKey: ['post-department-employee'],
+    mutationFn: postEmployeeDepartment,
+    onSuccess: (response) => {
+      console.log(response.data);
+      queryClient.invalidateQueries(['get-department-employees', id]);
+    },
+    onError: (response) => {
+      console.log(response.data);
+    }
+  })
+
   //get the single department
   async function getDepartment() {
     return await apiClient.get(`api/Department/${id}`);
@@ -40,6 +66,35 @@ function DepartmentPage() {
   async function getDepartmentEmployees() {
     return await apiClient.get(`/api/DepartmentEmployee?deptID=${id}`);
   }
+
+  //get all employees from the select menu
+  async function getEmployees() {
+    return await apiClient.get('/api/employee');
+  }
+
+  //post employee to department
+  async function postEmployeeDepartment() {
+    return await apiClient.post(`/api/emp-to-department?empID=${employeeToAdd}&depID=${id}`);
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+
+    let employeeId = formData.get('employeeSelect');
+    employeeToAdd = employeeId;
+
+    employeeDepartmentMutation.mutate();
+  }
+
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: 48 * 4.5 + 8,
+        width: 250,
+      },
+    },
+  };
 
   const tableColumns = [
     {field: 'id', headerName: 'ID', width: 70},
@@ -51,14 +106,18 @@ function DepartmentPage() {
       field: 'action',
       headerName: 'Actions',
       sortable: false,
-      width: 210,
+      width: 350,
       renderCell: (params) => {
         
         async function updateManager() {
           return await apiClient.put(`/api/DepartmentEmployee?eID=${params.row.id}&dID=${id}`);  
         }
         
-        const updateEmployeeManagerQuery = useMutation({
+        async function removeEmployee() {
+          
+        }
+
+        const updateEmployeeManagerMutation = useMutation({
           mutationKey: ['setManager', params.row.id],
           mutationFn: updateManager,
           onMutate: () => {console.log('mutate called')},
@@ -71,14 +130,20 @@ function DepartmentPage() {
           }
         })
 
-        function handleToggleClick() {
-          updateEmployeeManagerQuery.mutate();
+
+
+        function handleRemoveClick() {
           
+        }
+
+        function handleToggleClick() {
+          updateEmployeeManagerQuery.mutate(); 
         }
         
         return (<>
           <Link to={`/employee/${params.row.id}`}><Button>View</Button></Link>
           <Button onClick={handleToggleClick}>Toggle Manager</Button>
+          <Button onClick={handleRemoveClick}>Remove</Button>
         </>)
       }
     }
@@ -133,6 +198,39 @@ function DepartmentPage() {
           (departmentEmployeeQuery.isSuccess && departmentEmployeeQuery.data.data.length < 1) &&
           <Typography variant='h5'>No Employees in this department</Typography>
         }
+        <Box sx={{display: 'flex', width: '100%'}}>
+          <Paper elevation={3} sx={{ width: '100%', mt: 2 }}>
+            <Typography variant='h6' sx={{pt:2, px:2}}>Add Employee to Department</Typography>
+            <Box component='form' sx={{display: 'flex', flexDirection: 'row', p: 2}} onSubmit={handleSubmit}>
+              {
+                (employeesQuery.isSuccess && !employeesQuery.isLoading) && 
+                <>
+                  <FormControl fullWidth margin='normal'>
+                    <InputLabel id="employeeSelectLabel">Employee</InputLabel>
+                    <Select
+                            labelId="employeeSelectLabel"
+                            id="employeeSelect"
+                            name="employeeSelect"
+                            label="Employee"
+                            disabled={!employeesQuery.isSuccess}
+                            MenuProps={MenuProps}
+                            defaultValue={employeesQuery.data.data[0].employeeID}
+                        >
+                        {
+                            employeesQuery.data.data.map((e) => (
+                                <MenuItem key={e.employeeID} value={e.employeeID}>{`${e.firstName} ${e.lastName}`}</MenuItem>
+                            ))                
+                        }
+                    </Select>
+                  </FormControl>
+                  <Button type='submit' variant='contained' sx={{ mt: 3, mb: 2, mx:2 }}>
+                        Add
+                  </Button>
+                </>
+              }
+            </Box>
+          </Paper>
+        </Box>
       </Container>
     </>
   )

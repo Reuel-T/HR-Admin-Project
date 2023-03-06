@@ -71,7 +71,7 @@ namespace Hr_API.Controllers
         /// <response code="400">An error message detailing the incorrect parameter passed in</response>
         /// <returns></returns>
         [HttpPost]
-        [Route("api/emp-to-department")]
+        [Route("/api/emp-to-department")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> AddEmployeeToDepartment(int empID, int depID, bool manager)
@@ -185,16 +185,25 @@ namespace Hr_API.Controllers
         // POST: api/DepartmentEmployee
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<DepartmentEmployee>> PostDepartmentEmployee(DepartmentEmployee departmentEmployee)
+        public async Task<ActionResult<DepartmentEmployee>> PostDepartmentEmployee(CreateDepartmentEmployeeVM departmentEmployee)
         {
-          if (_context.DepartmentEmployees == null)
-          {
-              return Problem("Entity set 'HrAdminContext.DepartmentEmployees'  is null.");
-          }
-            _context.DepartmentEmployees.Add(departmentEmployee);
-            await _context.SaveChangesAsync();
+            if (_context.DepartmentEmployees == null)
+            {
+                return Problem("Entity set 'HrAdminContext.DepartmentEmployees'  is null.");
+            }
 
-            return CreatedAtAction("GetDepartmentEmployee", new { id = departmentEmployee.DepartmentEmployeeId }, departmentEmployee);
+            //check if there is already an employee assigned to the department
+            var e = await _context.DepartmentEmployees.Where(x => x.EmployeeId == departmentEmployee.employeeId && x.DepartmentId == departmentEmployee.departmentId).FirstOrDefaultAsync();
+
+            if (e == null)
+            {
+                _context.DepartmentEmployees.Add(VMtoDTO.DepartmentEmployee(departmentEmployee));
+                await _context.SaveChangesAsync();
+                return Ok("Employee assigned to department");
+            }else
+            {
+                return BadRequest("employee already assigned to department");
+            }
         }
 
         // DELETE: api/DepartmentEmployee/5

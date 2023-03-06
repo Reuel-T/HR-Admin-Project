@@ -87,11 +87,12 @@ npm run dev
 - [x] View Own Info
 - [x] Edit Employee Data
 - [x] Add Employee
-- [ ] Add Employee to Department
+- [x] Add Employee to Department
 - [x] Add Personal Manager to Employee
 - [x] Add Department
 - [x] Edit Department
 - [x] Change Department Status
 - [x] List Employees of Department
+- [ ] Remove Employee from Department
 - [ ] If Manager, view own departments and their employees
 - [ ] User Role checking for routes
