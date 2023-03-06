@@ -207,23 +207,25 @@ namespace Hr_API.Controllers
         }
 
         // DELETE: api/DepartmentEmployee/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDepartmentEmployee(int id)
+        [HttpPost]
+        [Route("/api/departmentEmployee/delete")]
+        public async Task<IActionResult> DeleteDepartmentEmployee(CreateDepartmentEmployeeVM model)
         {
             if (_context.DepartmentEmployees == null)
             {
                 return NotFound();
             }
-            var departmentEmployee = await _context.DepartmentEmployees.FindAsync(id);
-            if (departmentEmployee == null)
+            var departmentEmployee = await _context.DepartmentEmployees.Where(x => x.EmployeeId == model.employeeId && x.DepartmentId == model.departmentId).ToListAsync();
+            
+            if (departmentEmployee == null || departmentEmployee.Count < 1)
             {
-                return NotFound();
+                return NotFound("Can't find employee to delete");
+            }else
+            {
+                _context.DepartmentEmployees.RemoveRange(departmentEmployee);
+                await _context.SaveChangesAsync();
+                return Ok("Employee removed from department");
             }
-
-            _context.DepartmentEmployees.Remove(departmentEmployee);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
         private bool DepartmentEmployeeExists(int id)

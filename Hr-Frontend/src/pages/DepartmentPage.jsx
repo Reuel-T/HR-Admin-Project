@@ -109,18 +109,22 @@ function DepartmentPage() {
       width: 350,
       renderCell: (params) => {
         
+        const removeObject = {
+          employeeId: params.row.id,
+          departmentId: id
+        };
+
         async function updateManager() {
           return await apiClient.put(`/api/DepartmentEmployee?eID=${params.row.id}&dID=${id}`);  
         }
         
         async function removeEmployee() {
-          
+          return await apiClient.post('/api/departmentEmployee/delete', removeObject);
         }
 
         const updateEmployeeManagerMutation = useMutation({
           mutationKey: ['setManager', params.row.id],
           mutationFn: updateManager,
-          onMutate: () => {console.log('mutate called')},
           onSuccess: (response) => {
             console.log(response.data)
             queryClient.invalidateQueries(['get-department-employees', id]);
@@ -130,14 +134,23 @@ function DepartmentPage() {
           }
         })
 
-
+        const deleteEmployeeManagerMutation = useMutation({
+          mutationKey: ['delete-employee-manager', params.row.id, id],
+          mutationFn: removeEmployee,
+          onSuccess: () => {
+            queryClient.invalidateQueries(['get-department-employees', id]);
+          },
+          onError: (response) => {
+            console.log(response.data);
+          }
+        })
 
         function handleRemoveClick() {
-          
+          deleteEmployeeManagerMutation.mutate();
         }
 
         function handleToggleClick() {
-          updateEmployeeManagerQuery.mutate(); 
+          updateEmployeeManagerMutation.mutate(); 
         }
         
         return (<>
