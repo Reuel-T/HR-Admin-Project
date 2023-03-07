@@ -1,10 +1,11 @@
 import { Box, Button, FormControl, InputLabel, LinearProgress, MenuItem, Paper, Select, Typography } from '@mui/material';
 import { Container } from '@mui/system';
 import { DataGrid } from '@mui/x-data-grid';
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import apiClient from '../api/http';
+import UserContext from '../context/UserContext';
 
 function DepartmentPage() {
 
@@ -15,6 +16,38 @@ function DepartmentPage() {
 
   //value for employee to add route
   let employeeToAdd = null;
+
+  /**
+     * Getting the user context
+    */
+  const { user } = useContext(UserContext);
+
+  //navigation object
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    //if user not logged in  
+    if (user === null || user === undefined) {
+      navigate('/login');
+    } else {
+      if (user.role !== 0) {
+        console.log(user);
+        //get the department info object from the user info
+        let department = user.departments.find(department => {
+          return department.id === Number(id);
+        })
+        //check if the user is in the department
+        if (department !== null && department !== undefined){
+          //check if the user is a manager
+          if (!department.isManager) {
+            navigate(`/employee/${user.employeeID}`); 
+          }
+        } else {
+          navigate(`/employee/${user.employeeID}`); 
+        }
+      }
+    } 
+  })
 
   //query for department employee info
   const departmentEmployeeQuery = useQuery({
@@ -155,8 +188,13 @@ function DepartmentPage() {
         
         return (<>
           <Link to={`/employee/${params.row.id}`}><Button>View</Button></Link>
-          <Button onClick={handleToggleClick}>Toggle Manager</Button>
-          <Button onClick={handleRemoveClick}>Remove</Button>
+          {
+            user.role === 0 && 
+            <>
+              <Button onClick={handleToggleClick}>Toggle Manager</Button>
+              <Button onClick={handleRemoveClick}>Remove</Button>
+            </>
+          }
         </>)
       }
     }
@@ -211,39 +249,41 @@ function DepartmentPage() {
           (departmentEmployeeQuery.isSuccess && departmentEmployeeQuery.data.data.length < 1) &&
           <Typography variant='h5'>No Employees in this department</Typography>
         }
-        <Box sx={{display: 'flex', width: '100%'}}>
-          <Paper elevation={3} sx={{ width: '100%', mt: 2 }}>
-            <Typography variant='h6' sx={{pt:2, px:2}}>Add Employee to Department</Typography>
-            <Box component='form' sx={{display: 'flex', flexDirection: 'row', p: 2}} onSubmit={handleSubmit}>
-              {
-                (employeesQuery.isSuccess && !employeesQuery.isLoading) && 
-                <>
-                  <FormControl fullWidth margin='normal'>
-                    <InputLabel id="employeeSelectLabel">Employee</InputLabel>
-                    <Select
-                            labelId="employeeSelectLabel"
-                            id="employeeSelect"
-                            name="employeeSelect"
-                            label="Employee"
-                            disabled={!employeesQuery.isSuccess}
-                            MenuProps={MenuProps}
-                            defaultValue={employeesQuery.data.data[0].employeeID}
-                        >
-                        {
-                            employeesQuery.data.data.map((e) => (
-                                <MenuItem key={e.employeeID} value={e.employeeID}>{`${e.firstName} ${e.lastName}`}</MenuItem>
-                            ))                
-                        }
-                    </Select>
-                  </FormControl>
-                  <Button type='submit' variant='contained' sx={{ mt: 3, mb: 2, mx:2 }}>
-                        Add
-                  </Button>
-                </>
-              }
-            </Box>
-          </Paper>
-        </Box>
+        { user.role === 0 &&
+          <Box sx={{ display: 'flex', width: '100%' }}>
+            <Paper elevation={3} sx={{ width: '100%', mt: 2 }}>
+              <Typography variant='h6' sx={{pt:2, px:2}}>Add Employee to Department</Typography>
+              <Box component='form' sx={{display: 'flex', flexDirection: 'row', p: 2}} onSubmit={handleSubmit}>
+                {
+                  (employeesQuery.isSuccess && !employeesQuery.isLoading) && 
+                  <>
+                    <FormControl fullWidth margin='normal'>
+                      <InputLabel id="employeeSelectLabel">Employee</InputLabel>
+                      <Select
+                              labelId="employeeSelectLabel"
+                              id="employeeSelect"
+                              name="employeeSelect"
+                              label="Employee"
+                              disabled={!employeesQuery.isSuccess}
+                              MenuProps={MenuProps}
+                              defaultValue={employeesQuery.data.data[0].employeeID}
+                          >
+                          {
+                              employeesQuery.data.data.map((e) => (
+                                  <MenuItem key={e.employeeID} value={e.employeeID}>{`${e.firstName} ${e.lastName}`}</MenuItem>
+                              ))                
+                          }
+                      </Select>
+                    </FormControl>
+                    <Button type='submit' variant='contained' sx={{ mt: 3, mb: 2, mx:2 }}>
+                          Add
+                    </Button>
+                  </>
+                }
+              </Box>
+            </Paper>
+          </Box>
+        }
       </Container>
     </>
   )

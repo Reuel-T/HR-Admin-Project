@@ -1,10 +1,11 @@
 import { Avatar, Checkbox, Container, CssBaseline, LinearProgress, Paper, TextField, Typography, FormControlLabel, InputLabel, Select, MenuItem, FormControl, Button } from '@mui/material';
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import apiClient from '../api/http';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import { Box } from '@mui/system';
+import UserContext from '../context/UserContext';
 
 function EditEmployeePage() {
     //employee id from the router
@@ -12,7 +13,22 @@ function EditEmployeePage() {
 
     const queryClient = useQueryClient();
 
+    const { user, updateUser } = useContext(UserContext);
+
+    const navigate = useNavigate()
+
+    //object to be passed when editing an employee
     let updateEmployeeData = null;
+
+    useEffect(() => {
+        //if user not logged in  
+        if (user === null || user === undefined) {
+          navigate('/login');
+        } else {
+            console.log(user);
+            console.log(!(user.role === 0));
+        } 
+      })
 
     //building the employee query object
     const employeeQuery = useQuery({
@@ -65,7 +81,6 @@ function EditEmployeePage() {
     async function updateEmployee(){
         return await apiClient.put(`api/employee/${id}`, updateEmployeeData);
     }
-
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -205,11 +220,13 @@ function EditEmployeePage() {
                                 />
                                 <FormControlLabel
                                     label="Status"
+                                    disabled={!(user.role === 0)}    
                                     control={
                                     <Checkbox
                                         id='status'        
                                         name='status'
-                                        defaultChecked={employeeQuery.data.data.status}
+                                        checked={employeeQuery.data.data.status}
+                                        disabled={!(user.role === 0)}    
                                     />
                                   }
                                 />
@@ -223,8 +240,8 @@ function EditEmployeePage() {
                                             id="managerSelect"
                                             name="managerSelect"
                                             label="Manager"
-                                            disabled={!managerQuery.isSuccess}
-                                            defaultValue={ employeeQuery.data.data.managerID === null ? -1 : employeeQuery.data.data.managerID }    
+                                            disabled={!(user.role == 0)}
+                                            value={ employeeQuery.data.data.managerID === null ? -1 : employeeQuery.data.data.managerID }    
                                         >
                                         {
                                             managerQuery.data.data.map((m) => (

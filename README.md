@@ -96,6 +96,7 @@ npm run dev
 - [x] Remove Employee from Department
 - [x] Add Department accessible by admin only
 - [x] Edit Department accessible by admin only
-- [ ] Signed in user only able to view/edit their own info
+- [x] Signed in user only able to view/edit their own info
+- [x] Admins only able to edit managers/status of employees
 - [ ] If Manager, view own departments and their employees
 

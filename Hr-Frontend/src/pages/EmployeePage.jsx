@@ -11,13 +11,17 @@ import UserContext from '../context/UserContext';
 
 function EmployeePage() {
 
+    /**
+     * The ID from the route
+     */
     const { id } = useParams();
 
     /**
      * Getting the user context
     */
-    const { user, updateUser } = useContext(UserContext);
+    const { user } = useContext(UserContext);
 
+    //navigation object
     const navigate = useNavigate();
 
     //employee query object
@@ -80,6 +84,8 @@ function EmployeePage() {
       //if user not logged in  
       if (user === null || user === undefined) {
         navigate('/login');
+      } else {
+          console.log(user);
       } 
     })
     
@@ -158,9 +164,11 @@ function EmployeePage() {
                                     }
                                 </Box>    
                             </Box>
-                            {<Link to={`/employee/edit/${id}`}>
-                                <Button variant='contained'>Edit Employee</Button>
-                            </Link> }   
+                            { (user.role === 0 || user.employeeID === Number(id)) && 
+                                <Link to={`/employee/edit/${id}`}>
+                                    <Button variant='contained'>Edit Employee</Button>
+                                </Link>
+                            }   
                         </Paper>
                     </Box>
                 </Container>
