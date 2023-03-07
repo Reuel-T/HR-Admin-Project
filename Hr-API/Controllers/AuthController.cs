@@ -22,7 +22,7 @@ namespace Hr_API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<UserModel>> login(LoginModel l)
+        public async Task<ActionResult<EmployeeVM>> login(LoginModel l)
         {
             try
             {

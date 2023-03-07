@@ -15,7 +15,7 @@ function EditEmployeePage() {
 
     const { user, updateUser } = useContext(UserContext);
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     //object to be passed when editing an employee
     let updateEmployeeData = null;
@@ -37,6 +37,7 @@ function EditEmployeePage() {
         onSuccess: (response) => {
             console.log('Employee Query Response');
             console.log(response.data);
+            updateUser(response.data);
         },
         onError: (response) => {
             console.log('Employee Query Error Response');

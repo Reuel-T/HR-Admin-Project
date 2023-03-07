@@ -99,7 +99,11 @@ namespace Hr_API.Controllers
                 return BadRequest();
             }
 
-            var e = await _context.Employees.FindAsync(id);
+            var e = await _context.Employees
+                .Include(x => x.EmployeeManager)
+                .Include(x => x.DepartmentEmployees)
+                .ThenInclude(x => x.Department)
+                .Where(x => x.EmployeeId == id).FirstOrDefaultAsync();
 
             //there is an employee to edit
             if(e != null)
@@ -115,7 +119,8 @@ namespace Hr_API.Controllers
             try
             {
                 await _context.SaveChangesAsync();
-                return Ok(e);
+                
+                return Ok(DTOtoVM.EmployeeVM(e));
             }
             catch (DbUpdateConcurrencyException err)
             {

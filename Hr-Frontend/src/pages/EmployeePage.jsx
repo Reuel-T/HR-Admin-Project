@@ -146,14 +146,20 @@ function EmployeePage() {
                                         getEmployeeQuery.data.data.departments.length > 0
                                             ?
                                             <>
-                                                
-                                                <Stack direction='row' spacing={2}>
+                                                <Stack direction='row' spacing={2} maxWidth={'100%'}>
                                                     {getEmployeeQuery.data.data.departments.map((department) =>
-                                                        <Paper key={department.departmentID} sx={{flexGrow: 1, display:'flex', justifyContent:'center', alignItems:'center', height: 50, minWidth: 100}} >
-                                                            <Box>
-                                                                <Typography variant="body">{department.departmentName}</Typography>
-                                                            </Box>
-                                                        </Paper>
+                                                        (user.role === 0 || department.isManager === true) ?    
+                                                        <Link key={department.id} to={`/department/${department.id}`}>
+                                                            <Paper  sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 50, minWidth: 100 }} >
+                                                                <Box>
+                                                                    <Typography variant="body">{department.departmentName}</Typography>
+                                                                </Box>
+                                                            </Paper>
+                                                        </Link> : <Paper  sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 50, minWidth: 100 }} >
+                                                                <Box>
+                                                                    <Typography variant="body">{department.departmentName}</Typography>
+                                                                </Box>
+                                                            </Paper>
                                                     )}  
                                                 </Stack>
                                             </>
