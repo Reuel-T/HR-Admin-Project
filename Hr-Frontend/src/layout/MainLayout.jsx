@@ -12,7 +12,6 @@ import EmployeePage from '../pages/EmployeePage'
 import ListDepartmentsPage from '../pages/ListDepartmentsPage'
 import ListEmployeesPage from '../pages/ListEmployeesPage'
 import Login from '../pages/Login'
-import UserInfoPage from '../pages/UserInfoPage'
 
 function MainLayout() {
 
@@ -30,10 +29,6 @@ function MainLayout() {
             <Route
               path='/login'
               element={<Login/>}
-            />
-            <Route
-              path='/user-info'
-              element={<UserInfoPage/>}
             />
             <Route
               path='/employees'

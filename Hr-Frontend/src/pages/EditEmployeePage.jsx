@@ -11,10 +11,13 @@ function EditEmployeePage() {
     //employee id from the router
     const { id } = useParams();
 
+    //query client, used to invalidate and refetch employee data
     const queryClient = useQueryClient();
 
+    //getting the logged in user
     const { user, updateUser } = useContext(UserContext);
 
+    //UI state, for update feedback
     const [showAlertSuccess, updateShowAlertSuccess] = useState(false);
     const [showAlertFail, updateShowAlertFail] = useState(false);
 
@@ -63,6 +66,7 @@ function EditEmployeePage() {
         },
     })
 
+    //mutation function to update the current employee
     const employeeMutation = useMutation({
         mutationKey: ['update-employee', id],
         mutationFn: updateEmployee,
@@ -95,6 +99,7 @@ function EditEmployeePage() {
         return await apiClient.put(`api/employee/${id}`, updateEmployeeData);
     }
 
+    //runs on form submit to update the user
     function handleSubmit(event) {
         event.preventDefault();
         let formData = new FormData(event.currentTarget);
@@ -132,6 +137,7 @@ function EditEmployeePage() {
         employeeMutation.mutate();
     }
 
+    //UI function
     function stringAvatar(name) {
         return {
             sx: {
@@ -141,6 +147,7 @@ function EditEmployeePage() {
         };
     }
 
+    //UI function
     function stringToColor(string) {
         let hash = 0;
         let i;
@@ -161,6 +168,7 @@ function EditEmployeePage() {
         return color;
     }
 
+    //Used to stop the select menu from taking up the entire screen
     const MenuProps = {
         PaperProps: {
           style: {

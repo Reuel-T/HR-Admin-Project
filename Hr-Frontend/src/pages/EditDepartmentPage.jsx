@@ -10,11 +10,15 @@ import { useState } from 'react';
 
 function EditDepartmentPage() {
 
+    //get the id of the department from the route
     const { id } = useParams();
+    //query client to invalidate and update ui 
     const queryClient = useQueryClient();
 
+    //data to be passed when updating the department
     let updateDepartmentData = null;
 
+    //UI alert state, for user feedback
     const [showAlertSuccess, updateShowAlertSuccess] = useState(false);
     const [showAlertFail, updateShowAlertFail] = useState(false);
 
@@ -29,6 +33,7 @@ function EditDepartmentPage() {
         }
     })
 
+    //react query - gets the info for a single department
     const getDepartmentQuery = useQuery({
         queryKey: ['get-department', id],
         queryFn: getDepartment,
@@ -40,13 +45,13 @@ function EditDepartmentPage() {
         }
     })
 
+    //react query mutation - used to update department info
     const departmentMutation = useMutation({
         mutationKey: ['update-department', id],
         mutationFn: updateDepartment,
         onSuccess: (response) => {
             updateShowAlertSuccess(true);
             queryClient.invalidateQueries(['get-department', id]);
-            console.log(response.data);
         },
         onError: (response) => {
             updateShowAlertFail(true);
@@ -54,15 +59,17 @@ function EditDepartmentPage() {
         }
     })
 
+    //api call to get the department info
     async function getDepartment() {
         return await apiClient.get(`/api/Department/${id}`);
     }
 
+    //api call to update the department
     async function updateDepartment() {
-        console.log(updateDepartmentData);
         return await apiClient.put(`/api/Department/${id}`, updateDepartmentData);
     }
 
+    //runs on the form submission to update the current department
     function handleFormSubmit(event) {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);

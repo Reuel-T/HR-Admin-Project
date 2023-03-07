@@ -13,47 +13,46 @@ import { useNavigate } from 'react-router-dom';
 
 function Login() {
     
+    //data to be used in the login function
     let loginData = null;
 
+    //using context to allow the user to be accessed throughout the app
     const {user, updateUser} = useContext(UserContext);
     const navigate = useNavigate();
 
+    //runs on form submit
     function handleSubmit(event) {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
+        /* console.log({
             email: data.get('Username'),
             password: data.get('Password')
-        });
+        }); */
         loginData = data;
-        try {
-            loginUser();
-        } catch (error) {
-            console.log(error);
-        }
+        loginMutation.mutate();
     }
     
-    const { isLoading: isLoggingIn, mutate: loginUser } = useMutation(
-         async ()  => {
-            return await apiClient.post('/auth/login', loginData);
+    //React Query Mutation - Used for the login function
+    const loginMutation = useMutation({
+        mutationKey: ['login-user'],
+        mutationFn: loginUser,
+        onSuccess: ({data}) => {
+            updateUser(data);
+            navigate('/');
         },
-        {
-            onSuccess: ({data}) => {
-                let response = data
-                console.log(response);
-                updateUser(response);
-            }
-        },
-        {
-            onError: (res) => {
-                console.log(res.data);
-            }
+        onError: ({ data }) => {
+            console.log(data);
         }
-    )
+    })
+
+    //api login function
+    async function loginUser() {
+        return await apiClient.post('/auth/login', loginData);
+    }
 
     useEffect(() => {
-        console.log('use effect called');
-        console.log(user);
+        //console.log('use effect called');
+        //console.log(user);
         if (user !== null) {//redirect if the user is logged in. I wasted 6 hours, because of this
             navigate(`/`);
         }
@@ -93,8 +92,7 @@ function Login() {
                             label="Email Address"
                             name="Username"
                             autoComplete="email"
-                            autoFocus
-                            defaultValue="hradmin@test.com"    
+                            autoFocus 
                         />
                         <TextField
                             margin="normal"
@@ -105,7 +103,6 @@ function Login() {
                             type="Password"
                             id="Password"
                             autoComplete="current-password"
-                            defaultValue="TestPass1234"    
                         />
                         <Button
                             type="submit"

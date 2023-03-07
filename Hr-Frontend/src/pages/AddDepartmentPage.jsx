@@ -2,7 +2,7 @@ import { CssBaseline, Container, Box, Paper, Avatar, Typography, Button, Collaps
 import React, { useContext } from 'react'
 import { useState } from 'react';
 import { useMutation } from 'react-query';
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import apiClient from '../api/http';
 import CasesRoundedIcon from '@mui/icons-material/CasesRounded';
 import CloseIcon from '@mui/icons-material/Close';
@@ -23,7 +23,7 @@ function AddDepartmentPage() {
     /**
      * Getting the user context
     */
-    const { user, updateUser } = useContext(UserContext);
+    const { user } = useContext(UserContext);
    
     //navigate used to change pages if needed
     const navigate = useNavigate();

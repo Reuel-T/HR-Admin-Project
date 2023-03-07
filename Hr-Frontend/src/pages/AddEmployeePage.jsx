@@ -11,11 +11,13 @@ import UserContext from '../context/UserContext';
 function AddEmployeePage() {
 
     let createUserData = null;
-    const [createdUsername, updateCreatedUsername] = useState(null);
 
+    //states used for visual feedback
+    const [createdUsername, updateCreatedUsername] = useState(null);
     const [showAlertSuccess, updateShowAlertSuccess] = useState(false);
     const [showAlertFail, updateShowAlertFail] = useState(false);
 
+    //getting the logged in user from the context object
     const { user } = useContext(UserContext);
 
     useEffect(() => {
@@ -30,6 +32,7 @@ function AddEmployeePage() {
         }
     },[user])
 
+    //runs on form submit
     function handleSubmit(event) {
         event.preventDefault();
         updateShowAlertSuccess(false);
@@ -41,6 +44,7 @@ function AddEmployeePage() {
             telephoneNumber: data.get('telephoneNumber'),
             managerID: null
         };
+        //updates username state for UI feedback
         updateCreatedUsername(data.get('emailAddress'));
         try {
             createUserMutation.mutate();
@@ -50,6 +54,7 @@ function AddEmployeePage() {
         }
     }
 
+    //muation function to create a user
     const createUserMutation = useMutation({
         mutationKey: ['create-user'],
         mutationFn: createUser,
@@ -61,6 +66,7 @@ function AddEmployeePage() {
         }
     })
 
+    //api request function
     async function createUser() {
         return await apiClient.post('/api/Employee', createUserData);
     }

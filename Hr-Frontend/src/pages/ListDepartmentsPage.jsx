@@ -9,7 +9,10 @@ import { DataGrid } from '@mui/x-data-grid';
 
 function ListDepartmentsPage() {
 
-  const {user} = useContext(UserContext)
+  //gets the user from the context 
+  const { user } = useContext(UserContext)
+  
+  //state object to hold the departments from the API
   const [departments, updateDepartments] = useState([]);
 
   const navigate = useNavigate();
@@ -25,27 +28,29 @@ function ListDepartmentsPage() {
     }
   })
 
-  const { isLoading: isLoadingDepartments, refecth: getDepartments } = useQuery('get-departments',
-    async () => {
-      return await apiClient.get('api/department')
-    },
-    {
-      onSuccess: (response) => {
-        function convertDepartments(d) {
-          return {
-            id: d.departmentID,
-            departmentName: d.departmentName,
-            status: d.departmentStatus
-          }
+  //React Query Object to get departments
+  const getDepartmentsQuery = useQuery({
+    queryKey: ['get-departments'],
+    queryFn: getDepartments,
+    onSuccess: (response) => {
+      //converts the data from the api response to be used as data grid rows
+      function convertDepartments(d) {
+        return {
+          id: d.departmentID,
+          departmentName: d.departmentName,
+          status: d.departmentStatus
         }
-
-        let departmentResponse = response.data.map(convertDepartments);
-        updateDepartments(departmentResponse);
-        console.log(departmentResponse);
       }
+      let departmentResponse = response.data.map(convertDepartments);
+      updateDepartments(departmentResponse);
     }
-  )
+  })
 
+  async function getDepartments() {
+    return await apiClient.get('api/department')
+  }
+
+  //column definitions for the department
   const tableColumns = [
     {field: 'id', headerName: 'ID', width: 70},
     {field: 'departmentName', headerName: 'Department', width: 260},
@@ -68,7 +73,7 @@ function ListDepartmentsPage() {
     <>
       <Typography variant='h3' sx={{marginTop: 8}}>Departments</Typography>
       {
-        isLoadingDepartments &&
+        getDepartmentsQuery.isLoading &&
         <LinearProgress sx={{width: '100%', marginTop: 4}}/>
       }
       <Box sx={{height: '50vh', width: '100%', marginTop: 4}}>

@@ -12,30 +12,25 @@ function DepartmentPage() {
   //get id from route
   const { id } = useParams();
 
+  /**
+   *  query client - used to invalidate a query and refetch
+   */
   const queryClient = useQueryClient();
 
-  //value for employee to add route
+  /**
+   * Value to be used when posting an employee
+   */
   let employeeToAdd = null;
 
-  /**
-     * Getting the user context
-    */
+  //getting the user context
   const { user } = useContext(UserContext);
 
-  //navigation object
+  /**
+   * useNavigate hook - allows 
+   */
   const navigate = useNavigate();
 
-  useEffect(() => {
-    //check if the user is not logged in, redirect to login
-    if (user === null || user === undefined) {
-        navigate('/login');
-    }
-    //if not a super user, redirect to the main page
-    if (user.role !== 0 || user.role === undefined) {
-        navigate('/');
-    }
-})
-
+  //use effect code used to navigate to another page if the user should not be here
   useEffect(() => {
     //if user not logged in  
     if (user === null || user === undefined) {
@@ -60,7 +55,9 @@ function DepartmentPage() {
     } 
   })
 
-  //query for department employee info
+  /**
+   * React Query - Gets all the employees in this department
+   */
   const departmentEmployeeQuery = useQuery({
     queryKey: ['get-department-employees', id],
     queryFn: getDepartmentEmployees,
@@ -69,7 +66,9 @@ function DepartmentPage() {
     }
   })
 
-  //query for department info
+  /**
+   * React Query - Gets current department info
+   */
   const departmentQuery = useQuery({
     queryKey: ['get-department', id],
     queryFn: getDepartment,
@@ -78,6 +77,9 @@ function DepartmentPage() {
     }
   })
 
+  /**
+   * React Query - Gets All Employees for the add to department menu
+   */
   const employeesQuery = useQuery({
     queryKey: ['get-employees'],
     queryFn: getEmployees,
@@ -89,6 +91,9 @@ function DepartmentPage() {
     }
   })
 
+  /**
+   * React Query Mutation - Posts an Employee to the current Department
+   */
   const employeeDepartmentMutation = useMutation({
     mutationKey: ['post-department-employee'],
     mutationFn: postEmployeeDepartment,
@@ -101,26 +106,42 @@ function DepartmentPage() {
     }
   })
 
-  //get the single department
+  /**
+   * Gets the information related to this department
+   * @returns {Promise<AxiosResponse>}
+   */
   async function getDepartment() {
     return await apiClient.get(`api/Department/${id}`);
   }
 
-  //function to get the employees in a single department
+  /**
+   * Function to get all the employees in the current department
+   * @returns {Promise<AxiosResponse>}
+   */
   async function getDepartmentEmployees() {
     return await apiClient.get(`/api/DepartmentEmployee?deptID=${id}`);
   }
 
-  //get all employees from the select menu
+  /**
+   * Function to get all employees from database
+   * @returns {Promise<AxiosResponse>}
+   */
   async function getEmployees() {
     return await apiClient.get('/api/employee');
   }
 
-  //post employee to department
+  /**
+   * Function to post an employee to the current department
+   * @returns {Promise<AxiosResponse>}
+   */
   async function postEmployeeDepartment() {
     return await apiClient.post(`/api/emp-to-department?empID=${employeeToAdd}&depID=${id}`);
   }
 
+  /**
+   * Handles the Submission of the add user form
+   * @param {Event} event 
+   */
   function handleSubmit(event) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -131,6 +152,9 @@ function DepartmentPage() {
     employeeDepartmentMutation.mutate();
   }
 
+  /**
+   * Stops the select menu from being way too big
+   */
   const MenuProps = {
     PaperProps: {
       style: {
@@ -140,6 +164,9 @@ function DepartmentPage() {
     },
   };
 
+  /**
+   * Column definitions for the data grid 
+   */
   const tableColumns = [
     {field: 'id', headerName: 'ID', width: 70},
     {field: 'firstName', headerName: 'First Name', width: 130},
@@ -153,19 +180,23 @@ function DepartmentPage() {
       width: 350,
       renderCell: (params) => {
         
+        //object to be passed when removing an employee from the department
         const removeObject = {
           employeeId: params.row.id,
           departmentId: id
         };
 
+        //function to invert the manager option
         async function updateManager() {
           return await apiClient.put(`/api/DepartmentEmployee?eID=${params.row.id}&dID=${id}`);  
         }
         
+        //function to delete the employee from the department
         async function removeEmployee() {
           return await apiClient.post('/api/departmentEmployee/delete', removeObject);
         }
 
+        //muation function to toggle the employee manager status
         const updateEmployeeManagerMutation = useMutation({
           mutationKey: ['setManager', params.row.id],
           mutationFn: updateManager,
@@ -178,6 +209,7 @@ function DepartmentPage() {
           }
         })
 
+        //mutation function to remove the employee from the department
         const deleteEmployeeManagerMutation = useMutation({
           mutationKey: ['delete-employee-manager', params.row.id, id],
           mutationFn: removeEmployee,
@@ -189,10 +221,12 @@ function DepartmentPage() {
           }
         })
 
+        //runs when the user clicks remove
         function handleRemoveClick() {
           deleteEmployeeManagerMutation.mutate();
         }
 
+        //runs when the user clicks the toggle button
         function handleToggleClick() {
           updateEmployeeManagerMutation.mutate(); 
         }
@@ -211,6 +245,7 @@ function DepartmentPage() {
     }
   ]
 
+  //function to convert the department employee query response into a format that can be used in the data grid
   function getRows() {
     function convertRows(r) {
       return {

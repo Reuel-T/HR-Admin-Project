@@ -4,8 +4,8 @@ import apiClient from '../api/http';
 import { useQuery } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
-import { Button, LinearProgress, Stack, Typography } from '@mui/material';
-import { Box, width } from '@mui/system';
+import { Button, LinearProgress, Typography } from '@mui/material';
+import { Box } from '@mui/system';
 
 function ListEmployeesPage(){
 
@@ -14,7 +14,7 @@ function ListEmployeesPage(){
     /**
      * Getting the user context
     */
-    const { user, updateUser } = useContext(UserContext);
+    const { user } = useContext(UserContext);
 
     useEffect(() => {
         //check if the user is not logged in, redirect to login
@@ -29,38 +29,39 @@ function ListEmployeesPage(){
    
     const navigate = useNavigate();
 
-    const { isLoading: isLoadingEmployees, refetch: getEmployees } = useQuery('get-employees',
+    //React Query function to get all employees from the database
+    const getEmployeesQuery = useQuery({
+        queryKey: ['get-employees'],
+        queryFn: getEmployees,
+        onSuccess: (response) => {
 
-        async () => {
-            return await apiClient.get('/api/employee')
-        },
-        {
-            onSuccess: (response) => {
-
-                //Function used to create a list suitable for the data grid
-                function convertEmployees(e) {
-                    return {
-                        id: e.employeeID,
-                        firstName: e.firstName,
-                        lastName: e.lastName,
-                        emailAddress: e.emailAddress,
-                        managerName: e.managerName,
-                        status: e.status
-                    };
-                }
-
-                let employeeResponse = response.data.map(convertEmployees);
-                updateEmployees(employeeResponse);
-                console.log(employeeResponse);
-                console.log(response.data);
-                console.log(employees);
-            },
-            onError: (response) => {
-                console.log(response);
+            //Function used to create a list suitable for the data grid
+            function convertEmployees(e) {
+                return {
+                    id: e.employeeID,
+                    firstName: e.firstName,
+                    lastName: e.lastName,
+                    emailAddress: e.emailAddress,
+                    managerName: e.managerName,
+                    status: e.status
+                };
             }
+
+            let employeeResponse = response.data.map(convertEmployees);
+            updateEmployees(employeeResponse);
+        },
+        onError: (response) => {
+            console.log(response);
         }
+    }
     )
 
+    //function to get employees from API
+    async function getEmployees() {
+        return await apiClient.get('/api/employee');
+    }
+
+    //column definitions for the data grid
     const tableColumns = [
         {field: 'id', headerName: 'ID', width: 70},
         {field: 'firstName', headerName: 'First Name', width: 130},
@@ -88,7 +89,7 @@ function ListEmployeesPage(){
         <>
             <Typography variant='h3' sx={{marginTop: 8}}>Employees</Typography>
             {
-                isLoadingEmployees && 
+                getEmployeesQuery.isLoading && 
                 <LinearProgress sx={{width: '100%', marginTop: 8}}/>
             }
             

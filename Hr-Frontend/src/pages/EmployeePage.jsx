@@ -58,7 +58,7 @@ function EmployeePage() {
         };
     }
 
-    //function to get the color of the avatar
+    //function to get the color of the avatar - UI Function
     function stringToColor(string) {
         let hash = 0;
         let i;
