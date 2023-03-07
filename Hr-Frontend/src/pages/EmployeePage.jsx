@@ -24,8 +24,6 @@ function EmployeePage() {
     //navigation object
     const navigate = useNavigate();
 
-
-
     //employee query object
     const getEmployeeQuery = useQuery({
         queryKey: ['get-employee'],

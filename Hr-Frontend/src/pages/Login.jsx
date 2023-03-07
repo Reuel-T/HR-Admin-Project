@@ -102,7 +102,7 @@ function Login() {
                             label="Password"
                             type="Password"
                             id="Password"
-                            autoComplete="current-password"
+                            autoComplete="on"
                         />
                         <Button
                             type="submit"

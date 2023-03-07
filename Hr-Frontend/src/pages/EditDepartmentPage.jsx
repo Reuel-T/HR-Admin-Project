@@ -1,11 +1,12 @@
 import { Alert, Avatar, Box, Button, Checkbox, Collapse, Container, CssBaseline, FormControlLabel, IconButton, LinearProgress, Paper, TextField, Typography } from '@mui/material';
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import apiClient from '../api/http';
 import CasesRoundedIcon from '@mui/icons-material/CasesRounded';
 import CloseIcon from '@mui/icons-material/Close';
 import { useState } from 'react';
+import UserContext from '../context/UserContext';
 
 
 function EditDepartmentPage() {
@@ -14,6 +15,11 @@ function EditDepartmentPage() {
     const { id } = useParams();
     //query client to invalidate and update ui 
     const queryClient = useQueryClient();
+
+    //getting the logged in user
+    const { user } = useContext(UserContext);
+
+    const navigate = useNavigate();
 
     //data to be passed when updating the department
     let updateDepartmentData = null;

@@ -255,7 +255,7 @@ function EditEmployeePage() {
                                     <Checkbox
                                         id='status'        
                                         name='status'
-                                        checked={employeeQuery.data.data.status}
+                                        defaultChecked={employeeQuery.data.data.status}
                                         disabled={!(user.role === 0)}    
                                     />
                                   }

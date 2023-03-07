@@ -15,6 +15,8 @@ function ListEmployeesPage(){
      * Getting the user context
     */
     const { user } = useContext(UserContext);
+    
+    const navigate = useNavigate();
 
     useEffect(() => {
         //check if the user is not logged in, redirect to login
@@ -27,7 +29,6 @@ function ListEmployeesPage(){
         }
     })
    
-    const navigate = useNavigate();
 
     //React Query function to get all employees from the database
     const getEmployeesQuery = useQuery({
@@ -83,8 +84,6 @@ function ListEmployeesPage(){
         }
     ]
         
-    
-
     return (
         <>
             <Typography variant='h3' sx={{marginTop: 8}}>Employees</Typography>
