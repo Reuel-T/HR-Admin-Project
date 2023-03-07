@@ -1,34 +1,43 @@
 import { Container, Box, Paper, Typography, Avatar, Divider, Stack, Button } from '@mui/material';
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useQuery } from 'react-query';
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import apiClient from '../api/http';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import { useEffect } from 'react';
+import UserContext from '../context/UserContext';
 
 function EmployeePage() {
 
     const { id } = useParams();
 
-    const [employee, updateEmployee] = useState();
+    /**
+     * Getting the user context
+    */
+    const { user, updateUser } = useContext(UserContext);
 
-    const { isLoading: isLoadingEmployee, refetch: getEmployee } = useQuery('get-employee',
+    const navigate = useNavigate();
 
-        async () => {
-            return await apiClient.get(`/api/employee/${id}`)
+    //employee query object
+    const getEmployeeQuery = useQuery({
+        queryKey: ['get-employee', id],
+        queryFn: getEmployee,
+        onSuccess: (response) => {
+            console.log(response.data);
         },
-        {
-            onSuccess: (response) => {
-                updateEmployee(response.data);
-                console.log(response.data);
-            },
-            onError: (response) => {
-                console.log(error);
-            }
+        onError: (response) => {
+            console.log(error);
         }
-    )
+    })
 
+    //function to get the employee
+    async function getEmployee() {
+        return await apiClient.get(`/api/employee/${id}`)
+    }
+
+    //function to generate a user avatar
     function stringAvatar(name) {
         return {
             sx: {
@@ -38,6 +47,7 @@ function EmployeePage() {
         };
     }
 
+    //function to get the color of the avatar
     function stringToColor(string) {
         let hash = 0;
         let i;
@@ -58,6 +68,7 @@ function EmployeePage() {
         return color;
     }
 
+    //function to format a phone number, annoyingly doesnt seem to work properly
     function formatPhone(phoneNumber) {
         let phone = phoneNumber;
         phone.replace(/(\d{3})(\d{3})(\d{4})/, "($1)$2-$3"); // (012)345-6789
@@ -65,10 +76,18 @@ function EmployeePage() {
         return phone
     }
 
+    useEffect(() => {
+      //if user not logged in  
+      if (user === null || user === undefined) {
+        navigate('/login');
+      } 
+    })
+    
+
     return (
         <>
             {
-                employee &&
+                getEmployeeQuery.isSuccess &&
                 <Container sx={{ width: '90%', marginTop: 8 }}>
                     <Box >
                         <Paper elevation={3}
@@ -76,28 +95,28 @@ function EmployeePage() {
                         >
                             <Box
                                 sx={{ display: 'flex' }}>
-                                <Typography sx={{ flexGrow: 1 }} variant='h4'>{`${employee.firstName} ${employee.lastName}`}</Typography>
+                                <Typography sx={{ flexGrow: 1 }} variant='h4'>{`${getEmployeeQuery.data.data.firstName} ${getEmployeeQuery.data.data.lastName}`}</Typography>
                                 <Avatar
-                                    {...stringAvatar(`${employee.firstName} ${employee.lastName}`)} />
+                                    {...stringAvatar(`${getEmployeeQuery.data.data.firstName} ${getEmployeeQuery.data.data.lastName}`)} />
                             </Box>
                             <Typography sx={{ mt: 2 }} variant="h5" >Personal Information</Typography>
                             <Divider />
                             <Box sx={{ py: 3, px: 2 }}>
                                 <Box>
                                     <Typography variant='body2'>First Name</Typography>
-                                    <Typography variant='body'><strong>{employee.firstName}</strong></Typography>
+                                    <Typography variant='body'><strong>{getEmployeeQuery.data.data.firstName}</strong></Typography>
                                 </Box>
                                 <Box sx={{ py: 1 }}>
                                     <Typography variant='body2'>Last Name</Typography>
-                                    <Typography variant='body'><strong>{employee.lastName}</strong></Typography>
+                                    <Typography variant='body'><strong>{getEmployeeQuery.data.data.lastName}</strong></Typography>
                                 </Box>
                                 <Box sx={{ py: 1 }}>
                                     <Typography variant='body2'>Phone Number</Typography>
-                                    <Typography variant='body'>{employee.telephoneNumber && <strong>{formatPhone(employee.telephoneNumber)}</strong>}</Typography>
+                                    <Typography variant='body'>{getEmployeeQuery.data.data.telephoneNumber && <strong>{formatPhone(getEmployeeQuery.data.data.telephoneNumber)}</strong>}</Typography>
                                 </Box>
                                 <Box sx={{ py: 1 }}>
                                     <Typography variant='body2'>Email Address</Typography>
-                                    <Typography variant='body'><strong>{employee.emailAddress}</strong> </Typography>
+                                    <Typography variant='body'><strong>{getEmployeeQuery.data.data.emailAddress}</strong> </Typography>
                                 </Box>
                             </Box>
                             <Typography variant="h5" >Organisational Information</Typography>
@@ -106,24 +125,24 @@ function EmployeePage() {
                                 <Box sx={{ py: 1 }}>
                                     <Typography variant='body2'>Manager</Typography>
                                     {
-                                            employee.managerID ? <Typography variant='body1'><strong>{ employee.managerName }</strong></Typography> : <Typography variant='body1'><strong>Employee does not currently have a manager</strong></Typography>       
+                                            getEmployeeQuery.data.data.managerID ? <Typography variant='body1'><strong>{ getEmployeeQuery.data.data.managerName }</strong></Typography> : <Typography variant='body1'><strong>Employee does not currently have a manager</strong></Typography>       
                                     }
                                 </Box>
                                 <Box sx={{ py: 1 }}>
                                     <Typography variant='body2'>Status</Typography>
                                     {
-                                            employee.status ? <Stack direction='row'><CheckRoundedIcon color='success'/><Typography variant='body'><strong>Active</strong></Typography></Stack> : <CloseRoundedIcon color='error'/>      
+                                            getEmployeeQuery.data.data.status ? <Stack direction='row'><CheckRoundedIcon color='success'/><Typography variant='body'><strong>Active</strong></Typography></Stack> : <CloseRoundedIcon color='error'/>      
                                     }
                                 </Box>
                                 <Box sx={{ py: 1 }}>
                                     <Typography variant='h6' sx={{pb: 1}}>Departments</Typography>
                                     {
-                                        employee.departments.length > 0
+                                        getEmployeeQuery.data.data.departments.length > 0
                                             ?
                                             <>
                                                 
                                                 <Stack direction='row' spacing={2}>
-                                                    {employee.departments.map((department) =>
+                                                    {getEmployeeQuery.data.data.departments.map((department) =>
                                                         <Paper key={department.departmentID} sx={{flexGrow: 1, display:'flex', justifyContent:'center', alignItems:'center', height: 50, minWidth: 100}} >
                                                             <Box>
                                                                 <Typography variant="body">{department.departmentName}</Typography>
@@ -139,9 +158,9 @@ function EmployeePage() {
                                     }
                                 </Box>    
                             </Box>
-                            <Link to={`/employee/edit/${id}`}>
+                            {<Link to={`/employee/edit/${id}`}>
                                 <Button variant='contained'>Edit Employee</Button>
-                            </Link>    
+                            </Link> }   
                         </Paper>
                     </Box>
                 </Container>

@@ -94,5 +94,8 @@ npm run dev
 - [x] Change Department Status
 - [x] List Employees of Department
 - [x] Remove Employee from Department
+- [x] Add Department accessible by admin only
+- [x] Edit Department accessible by admin only
+- [ ] Signed in user only able to view/edit their own info
 - [ ] If Manager, view own departments and their employees
-- [ ] User Role checking for routes
+

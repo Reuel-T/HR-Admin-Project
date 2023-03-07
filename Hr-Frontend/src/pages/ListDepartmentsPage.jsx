@@ -55,7 +55,7 @@ function ListDepartmentsPage() {
       renderCell: (params) => {
           return (<>
               <Link to={`/department/${params.row.id}`}><Button>View</Button></Link>
-              <Link to={`/department/edit/${params.row.id}`}><Button>Edit</Button></Link>
+              {(user.role === 0 && user.role !== undefined) && <Link to={`/department/edit/${params.row.id}`}><Button>Edit</Button></Link>}
           </>)
       }
   }
@@ -77,11 +77,13 @@ function ListDepartmentsPage() {
           />
       }
       </Box>
-      <Box sx={{ marginTop: 4 }}>
+      { (user.role === 0 && user !== undefined) &&
+        <Box sx={{ marginTop: 4 }}>
           <Link to='/add-department'>
               <Button variant='contained'>Add Department</Button>
           </Link>
-      </Box>
+        </Box>
+      }
     </>
   )
 }
