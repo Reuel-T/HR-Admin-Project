@@ -25,7 +25,7 @@ function MainLayout() {
           <Routes>
             <Route
               path='/'
-              element={<UserInfoPage/>}
+              element={<EmployeePage/>}
             />
             <Route
               path='/login'

@@ -1,10 +1,10 @@
-import { Avatar, Checkbox, Container, CssBaseline, LinearProgress, Paper, TextField, Typography, FormControlLabel, InputLabel, Select, MenuItem, FormControl, Button } from '@mui/material';
+import { Avatar, Checkbox, Container, CssBaseline, LinearProgress, Paper, TextField, Typography, FormControlLabel, InputLabel, Select, MenuItem, FormControl, Button, IconButton, Alert, Collapse } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import apiClient from '../api/http';
-import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import { Box } from '@mui/system';
+import CloseIcon from '@mui/icons-material/Close';
 import UserContext from '../context/UserContext';
 
 function EditEmployeePage() {
@@ -14,6 +14,9 @@ function EditEmployeePage() {
     const queryClient = useQueryClient();
 
     const { user, updateUser } = useContext(UserContext);
+
+    const [showAlertSuccess, updateShowAlertSuccess] = useState(false);
+    const [showAlertFail, updateShowAlertFail] = useState(false);
 
     const navigate = useNavigate();
 
@@ -37,7 +40,6 @@ function EditEmployeePage() {
         onSuccess: (response) => {
             console.log('Employee Query Response');
             console.log(response.data);
-            updateUser(response.data);
         },
         onError: (response) => {
             console.log('Employee Query Error Response');
@@ -65,7 +67,15 @@ function EditEmployeePage() {
         onSuccess: (response) => {
             console.log('Employee Mutation Response');
             console.log(response.data);
+            if (id === user.employeeID) {
+                updateUser(response.data);
+            }
+            updateShowAlertSuccess(true);
             queryClient.invalidateQueries(['get-employee', id]);
+        },
+        onError: (response) => {
+            console.log(response.data);
+            updateShowAlertFail(true);
         }
     })
 
@@ -242,7 +252,7 @@ function EditEmployeePage() {
                                             name="managerSelect"
                                             label="Manager"
                                             disabled={!(user.role == 0)}
-                                            value={ employeeQuery.data.data.managerID === null ? -1 : employeeQuery.data.data.managerID }    
+                                            defaultValue={ employeeQuery.data.data.managerID === null ? -1 : employeeQuery.data.data.managerID }    
                                         >
                                         {
                                             managerQuery.data.data.map((m) => (
@@ -263,6 +273,52 @@ function EditEmployeePage() {
                             </Box>    
                         </Paper>
                     </Box>
+                    <Box sx={{ width: '100%', marginTop : 8 }}>
+                    <Collapse in={showAlertSuccess}>
+                        <Alert
+                            severity='success'
+                            action=
+                            {
+                                <IconButton
+                                aria-label="close"
+                                color="inherit"
+                                size="small"
+                                onClick={() => {
+                                    updateShowAlertSuccess(false);
+                                }}
+                                >
+                                <CloseIcon fontSize="inherit" />
+                                </IconButton>
+                            }
+                            sx={{ mb: 2 }}
+                        >
+                        {`Update Successful`}
+                        </Alert>
+                    </Collapse>
+                </Box>
+                <Box sx={{ width: '100%'}}>
+                    <Collapse in={showAlertFail}>
+                        <Alert
+                            severity='error'
+                            action=
+                            {
+                                <IconButton
+                                aria-label="close"
+                                color="inherit"
+                                size="small"
+                                onClick={() => {
+                                    updateShowAlertFail(false);
+                                }}
+                                >
+                                <CloseIcon fontSize="inherit" />
+                                </IconButton>
+                            }
+                            sx={{ mb: 2 }}
+                        >
+                        {`Update Failed`}
+                        </Alert>
+                    </Collapse>
+                </Box>    
                 </Container>
             }
         </>

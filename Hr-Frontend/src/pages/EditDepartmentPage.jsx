@@ -1,9 +1,12 @@
-import { Avatar, Box, Button, Checkbox, Container, CssBaseline, FormControlLabel, LinearProgress, Paper, TextField, Typography } from '@mui/material';
+import { Alert, Avatar, Box, Button, Checkbox, Collapse, Container, CssBaseline, FormControlLabel, IconButton, LinearProgress, Paper, TextField, Typography } from '@mui/material';
 import React from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useParams } from 'react-router-dom';
 import apiClient from '../api/http';
 import CasesRoundedIcon from '@mui/icons-material/CasesRounded';
+import CloseIcon from '@mui/icons-material/Close';
+import { useState } from 'react';
+
 
 function EditDepartmentPage() {
 
@@ -11,6 +14,9 @@ function EditDepartmentPage() {
     const queryClient = useQueryClient();
 
     let updateDepartmentData = null;
+
+    const [showAlertSuccess, updateShowAlertSuccess] = useState(false);
+    const [showAlertFail, updateShowAlertFail] = useState(false);
 
     const getDepartmentQuery = useQuery({
         queryKey: ['get-department', id],
@@ -27,10 +33,12 @@ function EditDepartmentPage() {
         mutationKey: ['update-department', id],
         mutationFn: updateDepartment,
         onSuccess: (response) => {
+            updateShowAlertSuccess(true);
             queryClient.invalidateQueries(['get-department', id]);
             console.log(response.data);
         },
         onError: (response) => {
+            updateShowAlertFail(true);
             console.log(response.data);
         }
     })
@@ -135,9 +143,54 @@ function EditDepartmentPage() {
                                 </Button>    
                             </Box>
                         </Paper>
-                    </Box>
+                        </Box>
+                        <Box sx={{ width: '100%', marginTop : 8 }}>
+                    <Collapse in={showAlertSuccess}>
+                        <Alert
+                            severity='success'
+                            action=
+                            {
+                                <IconButton
+                                aria-label="close"
+                                color="inherit"
+                                size="small"
+                                onClick={() => {
+                                    updateShowAlertSuccess(false);
+                                }}
+                                >
+                                <CloseIcon fontSize="inherit" />
+                                </IconButton>
+                            }
+                            sx={{ mb: 2 }}
+                        >
+                        {`Update Successful`}
+                        </Alert>
+                    </Collapse>
+                </Box>
+                <Box sx={{ width: '100%'}}>
+                    <Collapse in={showAlertFail}>
+                        <Alert
+                            severity='error'
+                            action=
+                            {
+                                <IconButton
+                                aria-label="close"
+                                color="inherit"
+                                size="small"
+                                onClick={() => {
+                                    updateShowAlertFail(false);
+                                }}
+                                >
+                                <CloseIcon fontSize="inherit" />
+                                </IconButton>
+                            }
+                            sx={{ mb: 2 }}
+                        >
+                        {`Update Failed`}
+                        </Alert>
+                    </Collapse>
+                </Box>    
                 </Container>
-                
             }
         </>
     )

@@ -3,11 +3,11 @@ import React, { useContext, useState } from 'react'
 import { useQuery } from 'react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import apiClient from '../api/http';
-import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { useEffect } from 'react';
 import UserContext from '../context/UserContext';
+import SupervisorAccountRoundedIcon from '@mui/icons-material/SupervisorAccountRounded';
 
 function EmployeePage() {
 
@@ -24,21 +24,28 @@ function EmployeePage() {
     //navigation object
     const navigate = useNavigate();
 
+
+
     //employee query object
     const getEmployeeQuery = useQuery({
-        queryKey: ['get-employee', id],
+        queryKey: ['get-employee'],
         queryFn: getEmployee,
         onSuccess: (response) => {
             console.log(response.data);
         },
         onError: (response) => {
-            console.log(error);
-        }
+            console.log(response);
+        },
+
     })
 
     //function to get the employee
     async function getEmployee() {
-        return await apiClient.get(`/api/employee/${id}`)
+        if (id !== undefined) {
+            return await apiClient.get(`/api/employee/${id}`);
+        } else {
+            return await apiClient.get(`/api/employee/${user.employeeID}`);
+        }
     }
 
     //function to generate a user avatar
@@ -85,11 +92,10 @@ function EmployeePage() {
       if (user === null || user === undefined) {
         navigate('/login');
       } else {
-          console.log(user);
+        console.log(user);
       } 
     })
     
-
     return (
         <>
             {
@@ -150,9 +156,10 @@ function EmployeePage() {
                                                     {getEmployeeQuery.data.data.departments.map((department) =>
                                                         (user.role === 0 || department.isManager === true) ?    
                                                         <Link key={department.id} to={`/department/${department.id}`}>
-                                                            <Paper  sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 50, minWidth: 100 }} >
-                                                                <Box>
-                                                                    <Typography variant="body">{department.departmentName}</Typography>
+                                                            <Paper elevation={6} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 50, minWidth: 100 }} >
+                                                                <Box sx={{display: 'flex', flexDirection: 'row'}}>
+                                                                    <Typography variant="body">{`${department.departmentName}`}</Typography>
+                                                                    <SupervisorAccountRoundedIcon/>    
                                                                 </Box>
                                                             </Paper>
                                                         </Link> : <Paper  sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 50, minWidth: 100 }} >
@@ -170,11 +177,18 @@ function EmployeePage() {
                                     }
                                 </Box>    
                             </Box>
-                            { (user.role === 0 || user.employeeID === Number(id)) && 
-                                <Link to={`/employee/edit/${id}`}>
-                                    <Button variant='contained'>Edit Employee</Button>
-                                </Link>
-                            }   
+                            {
+                                    (id !== undefined)
+                                        ? 
+                                            (user.role === 0 || user.employeeID === Number(id)) && 
+                                            <Link to={`/employee/edit/${id}`}>
+                                                <Button variant='contained'>Edit Employee</Button>
+                                            </Link>
+                                        : (user.role === 0) &&  
+                                            <Link to={`/employee/edit/${user.employeeID}`}>
+                                                <Button variant='contained'>Edit Employee</Button>
+                                            </Link>
+                            }      
                         </Paper>
                     </Box>
                 </Container>

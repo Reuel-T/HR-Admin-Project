@@ -28,30 +28,27 @@ function AddEmployeePage() {
         };
         updateCreatedUsername(data.get('emailAddress'));
         try {
-            createUser();
+            createUserMutation.mutate();
         } catch (error) {
             console.log(error);
             updateShowAlertFail(true);
         }
     }
 
-    const { isLoading: isCreatingUser, mutate: createUser } = useMutation(
-        async () => {
-            console.log(createUserData);
-            return await apiClient.post('/api/Employee', createUserData);
+    const createUserMutation = useMutation({
+        mutationKey: ['create-user'],
+        mutationFn: createUser,
+        onSuccess: () => {
+            updateShowAlertSuccess(true);
         },
-        {
-            onSuccess: ({ data }) => {
-                let response = data;
-                updateShowAlertSuccess(true);
-                console.log(response);
-            },
-            onError: (res) => {
-                console.log(res);
-                updateShowAlertFail(true);
-            }
+        onError: () => {
+            updateShowAlertFail(true);
         }
-    )
+    })
+
+    async function createUser() {
+        return await apiClient.post('/api/Employee', createUserData);
+    }
 
     return (
         <>
