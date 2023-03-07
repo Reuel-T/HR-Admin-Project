@@ -28,8 +28,10 @@ function EditEmployeePage() {
         if (user === null || user === undefined) {
           navigate('/login');
         } else {
-            console.log(user);
-            console.log(!(user.role === 0));
+            //if logged in user is not a superuser and is not the user being edited    
+            if (!(user.role === 0) && (user.employeeID !== id)) {
+                navigate('/');
+            }
         } 
       })
 
@@ -159,6 +161,15 @@ function EditEmployeePage() {
         return color;
     }
 
+    const MenuProps = {
+        PaperProps: {
+          style: {
+            maxHeight: 48 * 4.5 + 8,
+            width: 250,
+          },
+        },
+      };
+
     return (
         <>
             <CssBaseline/>
@@ -252,7 +263,8 @@ function EditEmployeePage() {
                                             name="managerSelect"
                                             label="Manager"
                                             disabled={!(user.role == 0)}
-                                            defaultValue={ employeeQuery.data.data.managerID === null ? -1 : employeeQuery.data.data.managerID }    
+                                            defaultValue={employeeQuery.data.data.managerID === null ? -1 : employeeQuery.data.data.managerID}
+                                            MenuProps={MenuProps}        
                                         >
                                         {
                                             managerQuery.data.data.map((m) => (

@@ -55,7 +55,6 @@ function Login() {
         console.log('use effect called');
         console.log(user);
         if (user !== null) {//redirect if the user is logged in. I wasted 6 hours, because of this
-            //navigate(`/employee/${user.employeeID}`);
             navigate(`/`);
         }
     }, [user]);

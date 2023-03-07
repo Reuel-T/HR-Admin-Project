@@ -18,6 +18,17 @@ function EditDepartmentPage() {
     const [showAlertSuccess, updateShowAlertSuccess] = useState(false);
     const [showAlertFail, updateShowAlertFail] = useState(false);
 
+    useEffect(() => {
+        //check if the user is not logged in, redirect to login
+        if (user === null || user === undefined) {
+            navigate('/login');
+        }
+        //if not a super user, redirect to the main page
+        if (user.role !== 0 || user.role === undefined) {
+            navigate('/');
+        }
+    })
+
     const getDepartmentQuery = useQuery({
         queryKey: ['get-department', id],
         queryFn: getDepartment,

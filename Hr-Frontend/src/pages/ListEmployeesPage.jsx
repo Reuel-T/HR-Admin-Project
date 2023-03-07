@@ -17,12 +17,15 @@ function ListEmployeesPage(){
     const { user, updateUser } = useContext(UserContext);
 
     useEffect(() => {
-        //check if the user is null, and redirect to login page
-        if (user === null || undefined) {
+        //check if the user is not logged in, redirect to login
+        if (user === null || user === undefined) {
             navigate('/login');
         }
-        console.log(user)
-    },[user])
+        //if not a super user, redirect to the main page
+        if (user.role !== 0 || user.role === undefined) {
+            navigate('/');
+        }
+    })
    
     const navigate = useNavigate();
 

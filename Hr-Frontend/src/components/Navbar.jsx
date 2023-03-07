@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
-import Button from '@mui/material/Button';
 import { Avatar, CssBaseline, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { useContext } from 'react';
@@ -14,6 +13,8 @@ import SupervisedUserCircleRoundedIcon from '@mui/icons-material/SupervisedUserC
 import CasesRoundedIcon from '@mui/icons-material/CasesRounded';
 import { Link, useNavigate, NavLink } from 'react-router-dom';
 import SupervisedUserCircleRounded from '@mui/icons-material/SupervisedUserCircleRounded';
+import LogoutIcon from '@mui/icons-material/Logout';
+import Logout from '@mui/icons-material/Logout';
 
 function Navbar(props) {
 
@@ -22,7 +23,6 @@ function Navbar(props) {
   const { user, updateUser } = useContext(UserContext);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const navigate = useNavigate()
-
 
   //set the dependency on user, so that the nav updates depending on the user
   useEffect(() => { }, [user]);
@@ -63,50 +63,72 @@ function Navbar(props) {
     setDrawerOpen(!drawerOpen);
   }
 
+  function handleLogoutClick(event) {
+    event.preventDefault();
+        updateUser(null);
+        navigate('/login');
+  }
+
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center', width: drawerWidth }}>
       <Typography variant='h6' sx={{ my: 2 }}>
         HR ADMIN
       </Typography>
       <Divider />
-      <List>
+      <List sx={{height : '100%'}}>
         <ListItem disablePadding>
-          <NavLink to='/user-info'>
-            <ListItemButton sx={{width: '100%'}}>
+          <NavLink to='/' style={{flexGrow : 1}}>
+            <ListItemButton>
               <ListItemIcon>
-                <AccountCircleIcon />
+                <AccountCircleIcon sx={{mx : 2}} />
                 <ListItemText primary={"My Info"}/>
               </ListItemIcon>
             </ListItemButton>
           </NavLink>
         </ListItem>
+        {
+          (user !== null && user !== undefined) &&
+          <>
+            {
+              user.role === 0 && 
+              <>
+                <ListItem disablePadding>
+                  <NavLink to='/employees' style={{flexGrow : 1}}>
+                    <ListItemButton>
+                      <ListItemIcon>
+                        <SupervisedUserCircleRounded sx={{mx : 2}}/>
+                        <ListItemText primary={"Employees"}/>
+                      </ListItemIcon>
+                    </ListItemButton>
+                  </NavLink>
+                </ListItem>
+                <ListItem disablePadding style={{flexGrow: 1}}>
+                  <NavLink to='/departments' style={{flexGrow : 1}}>
+                    <ListItemButton>
+                      <ListItemIcon>
+                        <CasesRoundedIcon sx={{mx : 2}}/>
+                        <ListItemText primary={"Departments"}/>
+                      </ListItemIcon>
+                    </ListItemButton>
+                  </NavLink>
+              </ListItem>
+              </>
+            }
+          </>
+        }
         <ListItem disablePadding>
-          <NavLink to='/employees'>
-            <ListItemButton>
+            <ListItemButton onClick={handleLogoutClick}>
               <ListItemIcon>
-                <SupervisedUserCircleRounded />
-                <ListItemText primary={"Employees"}/>
+              <Logout sx={{mx:2}} />
+                <ListItemText primary={"Log Out"}/>
               </ListItemIcon>
             </ListItemButton>
-          </NavLink>
-        </ListItem>
-        <ListItem disablePadding>
-          <NavLink to='/departments'>
-            <ListItemButton>
-              <ListItemIcon>
-                <CasesRoundedIcon />
-                <ListItemText primary={"Departments"}/>
-              </ListItemIcon>
-            </ListItemButton>
-          </NavLink>
         </ListItem>
       </List>
     </Box>
   )
 
   const container = window !== undefined ? () => window().document.body : undefined;
-
-
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />

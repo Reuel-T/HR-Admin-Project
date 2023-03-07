@@ -162,7 +162,7 @@ function EmployeePage() {
                                                                     <SupervisorAccountRoundedIcon/>    
                                                                 </Box>
                                                             </Paper>
-                                                        </Link> : <Paper  sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 50, minWidth: 100 }} >
+                                                        </Link> : <Paper key={department.id} elevation={6} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 50, minWidth: 100 }} >
                                                                 <Box>
                                                                     <Typography variant="body">{department.departmentName}</Typography>
                                                                 </Box>

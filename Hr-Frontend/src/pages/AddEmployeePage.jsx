@@ -1,11 +1,12 @@
 import { Avatar, Box, CssBaseline, Paper, TextField, Typography, Button, Alert, IconButton } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import { Container } from '@mui/system';
 import { useMutation } from 'react-query';
 import apiClient from '../api/http';
 import CloseIcon from '@mui/icons-material/Close';
 import Collapse from '@mui/material/Collapse';
+import UserContext from '../context/UserContext';
 
 function AddEmployeePage() {
 
@@ -14,6 +15,20 @@ function AddEmployeePage() {
 
     const [showAlertSuccess, updateShowAlertSuccess] = useState(false);
     const [showAlertFail, updateShowAlertFail] = useState(false);
+
+    const { user } = useContext(UserContext);
+
+    useEffect(() => {
+        //check if the user is null, and redirect to login page
+        if (user === null || undefined) {
+            navigate('/login');
+        } else {
+            //if not a super user, this page cannot be accessed
+            if (user.role !== 0 || user.role === undefined) {
+                navigate('/');
+            }
+        }
+    },[user])
 
     function handleSubmit(event) {
         event.preventDefault();

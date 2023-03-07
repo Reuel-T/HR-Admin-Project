@@ -26,6 +26,17 @@ function DepartmentPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    //check if the user is not logged in, redirect to login
+    if (user === null || user === undefined) {
+        navigate('/login');
+    }
+    //if not a super user, redirect to the main page
+    if (user.role !== 0 || user.role === undefined) {
+        navigate('/');
+    }
+})
+
+  useEffect(() => {
     //if user not logged in  
     if (user === null || user === undefined) {
       navigate('/login');
