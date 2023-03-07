@@ -31,9 +31,12 @@ function EditEmployeePage() {
         if (user === null || user === undefined) {
           navigate('/login');
         } else {
-            //if logged in user is not a superuser and is not the user being edited    
-            if (!(user.role === 0) && (user.employeeID !== id)) {
-                navigate('/');
+            //if the user isnt an admin
+            if (!(user.role === 0)) {
+                //if the user isn't the user to be edited
+                if (!(user.employeeID === Number(id))) {
+                    navigate('/')
+                }
             }
         } 
       })
