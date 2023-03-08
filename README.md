@@ -110,6 +110,7 @@ Signing in with an email and password is required
 ![Login Page](https://user-images.githubusercontent.com/69512501/223711456-a2eec770-b6ed-49bf-ba3d-cfbe2c6f3e0c.png)
 
 An Admin user is included in the database with the following login
+
 `email : hradmin@test.com password: TestPass1234`
 
 On Successful sign in, The user is presented with their profile page
@@ -118,3 +119,70 @@ On Successful sign in, The user is presented with their profile page
 Here, they can view their information, edit it or check the departments they have been assigned to. 
 
 If the user is an admin or manager of their department, they can also view the employees of this department.
+
+Users are able to navigate using the sidebar. Only Admins are able to see the employee and department options
+
+![Sidebar](https://user-images.githubusercontent.com/69512501/223713484-d5793e4e-e833-4b4b-a5cc-c2fa8cde4eec.png)
+
+The Employee page, (Accessible only by admins) provides a master list of all employees in the database
+![image](https://user-images.githubusercontent.com/69512501/223713863-abbaf889-9012-41e5-8d8a-e17ba19027c1.png)
+
+From this page, the add employee page can also be accessed. This page is only viewable by admins
+
+![Add Employee Page](https://user-images.githubusercontent.com/69512501/223715480-9d6d3ee7-33cc-4847-a089-755eaa2fb0d0.png)
+
+The list makes use of the MUI Data Grid, which allows for extra functionality such as searching, filters, and sorting. To access these, click the three dots next to a column to view the UI
+
+![Filter Menu](https://user-images.githubusercontent.com/69512501/223714341-743d9555-513d-4a7d-b20f-19966df15f7a.png)
+
+![Filters Active](https://user-images.githubusercontent.com/69512501/223714535-f8245796-a085-455f-8bec-6a88d5ec050b.png)
+
+The user is also able to directly access an employee's page as well as edit them
+
+The user edit page is only accessible by the user themselves and an admin user. Only Admins are able to change the status and manager of the user
+
+![User Edit Page](https://user-images.githubusercontent.com/69512501/223714938-795b9682-c79d-445b-b2e0-b9a1b3bf4666.png)
+
+The departments list acts much like the employee list, being only accessible to admins and providing a filterable list of all departments within the organisation. From here, an admin can access the details of a department, edit it, or add a new one.
+
+![Department Page](https://user-images.githubusercontent.com/69512501/223716072-40ec13b4-ad3a-48ec-b99b-7b1642767a50.png)
+
+![Add Department Page](https://user-images.githubusercontent.com/69512501/223716439-362b8df8-b9c7-412d-a4e4-0b087882465c.png)
+
+![Edit Department Page](https://user-images.githubusercontent.com/69512501/223716566-f20d8496-fa71-4db2-be3c-a4056ca9bd3f.png)
+
+![View Department Page](https://user-images.githubusercontent.com/69512501/223716949-f84aab62-208a-48d7-9c1c-1d8e3486816e.png)
+
+This page is accessible by both managers of the department and admins. Admins do have access to more features, namely adding and removing employees, as well as making them managers.
+
+A user who is a manager is included with the details
+
+`email: fcs@email.com password: RX7`
+
+Users who are not admins only have access to their own page, and if they are a department manager, the page of that department. They are also not able to change their status or manager in their edit page
+
+![Non Admin Sidebar](https://user-images.githubusercontent.com/69512501/223718781-88c2b8ca-8e9d-4f9c-ab98-ae9e67620d3c.png)
+
+Here you can see that the options to change the status and manager of the user is disabled
+
+![Non Admin Edit Page](https://user-images.githubusercontent.com/69512501/223719078-5076c32a-87fd-4b07-81ad-b8244a3e3527.png)
+
+The department page only viewable for managers
+
+![Non Admin Department View Page](https://user-images.githubusercontent.com/69512501/223719233-f1f828d9-bbfe-425f-b897-bf8d6bdbe416.png)
+
+A user who is not a manager is included with the details
+
+`email: fd@email.com password: Password123#`
+
+A user who is a manager of one department and a regular member of another is included with the details
+
+`email: dr@email.com password: Password123#`
+
+![Manager User Page](https://user-images.githubusercontent.com/69512501/223720733-f6a41180-816a-40c4-9858-73e15fff2a2d.png)
+
+
+
+
+
+
