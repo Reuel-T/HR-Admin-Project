@@ -184,7 +184,7 @@ function EmployeePage() {
                                             </Link>
                                         : (user.role === 0 || user.employeeID === user.employeeID) &&  
                                             <Link to={`/employee/edit/${user.employeeID}`}>
-                                                <Button variant='contained'>Edit Employee</Button>
+                                                <Button variant='contained'>Edit</Button>
                                             </Link>
                             }      
                         </Paper>
