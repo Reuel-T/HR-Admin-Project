@@ -154,13 +154,13 @@ function EmployeePage() {
                                                     {getEmployeeQuery.data.data.departments.map((department) =>
                                                         (user.role === 0 || department.isManager === true) ?    
                                                         <Link key={department.id} to={`/department/${department.id}`}>
-                                                            <Paper elevation={6} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 50, minWidth: 100 }} >
+                                                            <Paper elevation={6} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 50, minWidth: 100, px: 2 }} >
                                                                 <Box sx={{display: 'flex', flexDirection: 'row'}}>
                                                                     <Typography variant="body">{`${department.departmentName}`}</Typography>
                                                                     <SupervisorAccountRoundedIcon/>    
                                                                 </Box>
                                                             </Paper>
-                                                        </Link> : <Paper key={department.id} elevation={6} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 50, minWidth: 100 }} >
+                                                        </Link> : <Paper key={department.id} elevation={6} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 50, minWidth: 100, px:2 }} >
                                                                 <Box>
                                                                     <Typography variant="body">{department.departmentName}</Typography>
                                                                 </Box>
@@ -180,7 +180,7 @@ function EmployeePage() {
                                         ? 
                                             (user.role === 0 || user.employeeID === Number(id)) && 
                                             <Link to={`/employee/edit/${id}`}>
-                                                <Button variant='contained'>Edit Employee</Button>
+                                                <Button variant='contained'>Edit</Button>
                                             </Link>
                                         : (user.role === 0 || user.employeeID === user.employeeID) &&  
                                             <Link to={`/employee/edit/${user.employeeID}`}>
