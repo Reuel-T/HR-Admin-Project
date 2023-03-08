@@ -50,6 +50,12 @@ cd Hr-API
 dotnet run
 ```
 
+It is possible that you may have to run these before `dotnet run` to resolve project dependencies
+```ps
+dotnet restore
+dotnet build
+```
+
 You can open http://localhost:5252/index.html in your browser to view the Swagger generated UI for the API endpoints as well as test them out without needing to use the frontend.
 
 ### API Features
@@ -131,7 +137,7 @@ From this page, the add employee page can also be accessed. This page is only vi
 
 ![Add Employee Page](https://user-images.githubusercontent.com/69512501/223715480-9d6d3ee7-33cc-4847-a089-755eaa2fb0d0.png)
 
-The list makes use of the MUI Data Grid, which allows for extra functionality such as searching, filters, and sorting. To access these, click the three dots next to a column to view the UI
+The list makes use of the [MUI Data Grid](https://mui.com/x/react-data-grid/), which allows for extra functionality such as searching, filters, and sorting. To access these, click the three dots next to a column to view the UI
 
 ![Filter Menu](https://user-images.githubusercontent.com/69512501/223714341-743d9555-513d-4a7d-b20f-19966df15f7a.png)
 
