@@ -22,10 +22,12 @@ namespace Hr_API.Controllers
         }
 
         [HttpPost]
+        //basic login method
         public async Task<ActionResult<EmployeeVM>> login(LoginModel l)
         {
             try
             {
+                //I WOULD 100% hash the password using something like bcrypt.net, but it makes testing a pain, since I can't check plaintext passwords
                 var e = await _context.Employees
                     .Where(x => x.EmployeeEmailAddress.Equals(l.Username) && x.EmployeePassword.Equals(l.Password))
                     .Include(x => x.EmployeeManager)

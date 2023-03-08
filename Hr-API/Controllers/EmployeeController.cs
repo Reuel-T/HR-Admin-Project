@@ -168,6 +168,7 @@ namespace Hr_API.Controllers
                     EmployeePassword = "Password123#",
                     EmployeeRole = 2
                 };
+                //I WOULD 100% hash this using something like bcrypt.net, but it makes testing a pain, since I can't check plaintext passwords
 
                 //if we're assigning a manager to the employee
                 if(employeeIn.ManagerID != null)

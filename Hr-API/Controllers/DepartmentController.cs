@@ -23,6 +23,7 @@ namespace Hr_API.Controllers
         }
 
         // GET: api/Department
+        //gets a list of departments, filterable by the status
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DepartmentVM>>> GetDepartments(bool? status)
         {
@@ -59,6 +60,7 @@ namespace Hr_API.Controllers
         }
 
         // GET: api/Department/5
+        //returns a single department
         [HttpGet("{id}")]
         public async Task<ActionResult<DepartmentVM>> GetDepartment(int id)
         {
@@ -80,9 +82,11 @@ namespace Hr_API.Controllers
 
         // PUT: api/Department/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //updates an existing department
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDepartment(int id, EditDepartmentVM department)
         {
+            //check if the correct department is being edited
             if (id != department.ID)
             {
                 return BadRequest();
@@ -120,6 +124,7 @@ namespace Hr_API.Controllers
 
         // POST: api/Department
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //adds a department to the database
         [HttpPost]
         public async Task<ActionResult<Department>> PostDepartment(CreateDepartmentViewModel department)
         {
