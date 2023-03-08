@@ -104,3 +104,17 @@ npm run dev
 - [x] Admins only able to edit managers/status of employees
 - [x] If Manager, view own departments and their employees
 
+### Using the Frontend
+
+Signing in with an email and password is required
+![Login Page](https://user-images.githubusercontent.com/69512501/223711456-a2eec770-b6ed-49bf-ba3d-cfbe2c6f3e0c.png)
+
+An Admin user is included in the database with the following login
+`email : hradmin@test.com password: TestPass1234`
+
+On Successful sign in, The user is presented with their profile page
+![Profile Page](https://user-images.githubusercontent.com/69512501/223712358-289bef5d-f4d6-4f8a-b826-94bb7753b557.png)
+
+Here, they can view their information, edit it or check the departments they have been assigned to. 
+
+If the user is an admin or manager of their department, they can also view the employees of this department.
