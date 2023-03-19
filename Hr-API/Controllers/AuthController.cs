@@ -2,8 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Hr_API.ViewModels;
 using Hr_API.Models;
 using Hr_API.Helpers;
@@ -15,10 +19,12 @@ namespace Hr_API.Controllers
     public class AuthController : Controller
     {
         private readonly HrAdminContext _context;
+        private readonly IConfiguration _configuration;
 
-        public AuthController(HrAdminContext context)
+        public AuthController(HrAdminContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         [HttpPost]
@@ -40,7 +46,26 @@ namespace Hr_API.Controllers
                     return Unauthorized("Unable to log in");
                 }else
                 {
-                    return Ok(DTOtoVM.EmployeeVM(e));
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    var key = _configuration.GetSection("Jwt:Key").Value;
+                    var tokenDescriptor = new SecurityTokenDescriptor
+                    {
+                        Subject = new ClaimsIdentity(new[]
+                        {
+                            new Claim("id", e.EmployeeId.ToString()),
+                            new Claim("firstName", e.EmployeeFirstName),
+                            new Claim("lastName", e.EmployeeSurname),
+                            new Claim("TelephoneNumber", e.EmployeeTelephoneNumber),
+                            new Claim(ClaimTypes.Email, e.EmployeeEmailAddress),
+                            new Claim(ClaimTypes.Role, e.EmployeeRole.ToString())
+                        }),
+                        Expires = DateTime.UtcNow.AddMinutes(1),
+                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)), SecurityAlgorithms.HmacSha256Signature)
+                    };
+
+                    var token = tokenHandler.CreateToken(tokenDescriptor);
+
+                    return Ok(new { Model = DTOtoVM.EmployeeVM(e), token = tokenHandler.WriteToken(token)});
                 }
             }
             catch (System.Exception)
