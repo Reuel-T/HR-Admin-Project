@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
@@ -81,6 +82,9 @@ namespace Hr_API.Controllers
             string roleId = User.FindFirstValue(ClaimTypes.Role);
             string userId = User.FindFirstValue("id");
 
+            //list of departments the user manages
+            List<int> managedDepartments = JsonSerializer.Deserialize<List<int>>(User.FindFirstValue("managedDepartments"));
+
             if (_context.Employees == null)
             {
                 return NotFound();
@@ -102,6 +106,14 @@ namespace Hr_API.Controllers
                 bool manages = employee.EmployeeManagerId.ToString() == userId;
                 bool idValid = (!string.IsNullOrEmpty(userId) && userId.Equals(id));
                 bool roleValid = (!string.IsNullOrEmpty(roleId) && roleId.Equals("0"));
+
+                List<int> employeeDepartments = new List<int>();
+
+                //list of departments the requested employee is part of
+                employee.DepartmentEmployees.ToList().ForEach(x => { employeeDepartments.Add(x.DepartmentId.Value); });
+
+                //check if the users managed departments contains any of the departments that this employee is part of
+                manages = managedDepartments.Intersect(employeeDepartments).Any();
 
                 //if the user requests themself or is an admin or manages this employee
                 if ( idValid || roleValid || manages)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Text;
+using System.Text.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
@@ -48,6 +49,12 @@ namespace Hr_API.Controllers
                     return Unauthorized("Unable to log in");
                 }else
                 {
+                    List<int> managedDepartments = new List<int>();
+                    e.DepartmentEmployees.Where(x => x.DepartmentManager)
+                    .ToList().ForEach(department => managedDepartments.Add(department.DepartmentId.Value));
+
+                    string listManagedDepartments = JsonSerializer.Serialize(managedDepartments);
+
                     var tokenHandler = new JwtSecurityTokenHandler();
                     var key = _configuration.GetSection("Jwt:Key").Value;
                     var tokenDescriptor = new SecurityTokenDescriptor
@@ -57,9 +64,10 @@ namespace Hr_API.Controllers
                             new Claim("id", e.EmployeeId.ToString()),
                             new Claim("firstName", e.EmployeeFirstName),
                             new Claim("lastName", e.EmployeeSurname),
-                            new Claim("TelephoneNumber", e.EmployeeTelephoneNumber),
+                            new Claim("telephoneNumber", e.EmployeeTelephoneNumber),
                             new Claim(ClaimTypes.Email, e.EmployeeEmailAddress),
-                            new Claim(ClaimTypes.Role, e.EmployeeRole.ToString())
+                            new Claim(ClaimTypes.Role, e.EmployeeRole.ToString()),
+                            new Claim("managedDepartments", listManagedDepartments)
                         }),
                         Expires = DateTime.UtcNow.AddMinutes(30),
                         SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)), SecurityAlgorithms.HmacSha256Signature)
