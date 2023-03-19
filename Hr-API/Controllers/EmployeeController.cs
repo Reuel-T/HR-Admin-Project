@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Hr_API.Models;
 using Hr_API.ViewModels;
@@ -12,6 +14,7 @@ using Hr_API.Helpers;
 namespace Hr_API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class EmployeeController : ControllerBase
     {
@@ -20,6 +23,21 @@ namespace Hr_API.Controllers
         public EmployeeController(HrAdminContext context)
         {
             _context = context;
+        }
+
+        [HttpGet]
+        [Route("/api/me")]
+        public async Task<ActionResult<EmployeeVM>> GetSelf(){
+
+            string id = User.FindFirstValue("id");
+            if(!string.IsNullOrEmpty(id))
+            {
+                return RedirectToAction("GetEmployee", new { id = Convert.ToInt32(id) });
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         // GET: api/Employee
@@ -56,9 +74,13 @@ namespace Hr_API.Controllers
         /// </summary>
         /// <param name="id">The ID of an employee to search for</param>
         /// <returns></returns>
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("/api/employees/{id}")]
         public async Task<ActionResult<EmployeeVM>> GetEmployee(int id)
         {
+            string roleId = User.FindFirstValue(ClaimTypes.Role);
+            string userId = User.FindFirstValue("id");
+
             if (_context.Employees == null)
             {
                 return NotFound();
@@ -77,9 +99,18 @@ namespace Hr_API.Controllers
                 return NotFound();
             }else
             {
-                EmployeeVM result = DTOtoVM.EmployeeVM(employee);
+                bool manages = employee.EmployeeManagerId.ToString() == userId;
+                bool idValid = (!string.IsNullOrEmpty(userId) && userId.Equals(id));
+                bool roleValid = (!string.IsNullOrEmpty(roleId) && roleId.Equals("0"));
 
-                return Ok(result);
+                //if the user requests themself or is an admin or manages this employee
+                if ( idValid || roleValid || manages)
+                {
+                    return Ok(DTOtoVM.EmployeeVM(employee));
+                }else
+                {
+                    return Unauthorized();
+                }
             }
         }
 
