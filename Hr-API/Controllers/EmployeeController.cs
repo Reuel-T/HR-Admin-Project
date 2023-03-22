@@ -103,8 +103,11 @@ namespace Hr_API.Controllers
                 return NotFound();
             }else
             {
+                //if the user manages this employee
                 bool manages = employee.EmployeeManagerId.ToString() == userId;
+                //if the user is this employee
                 bool idValid = (!string.IsNullOrEmpty(userId) && userId.Equals(id));
+                //if the user is an admin
                 bool roleValid = (!string.IsNullOrEmpty(roleId) && roleId.Equals("0"));
 
                 List<int> employeeDepartments = new List<int>();

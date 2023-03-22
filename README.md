@@ -1,5 +1,8 @@
 # HR Admin Project
 
+## **The Frontend Will not work properly**
+I started adding JWT Authentication to the API and forgot to make a new branch. 
+
 This application consists of 3 parts, A SQL Server Database, a .NET 7 Web API and a React frontend using Vite
 
 ## Database
