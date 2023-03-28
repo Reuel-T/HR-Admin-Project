@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Hr_API.Models;
 using Hr_API.ViewModels;
 using Hr_API.Helpers;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Hr_API.Controllers
 {
@@ -126,6 +127,35 @@ namespace Hr_API.Controllers
                 {
                     return Unauthorized();
                 }
+            }
+        }
+        /// <summary>
+        /// Gets the Managed Employees for the signed in user
+        /// </summary>
+        /// <returns>A list of employee objects containing their id and names</returns>
+        [HttpGet]
+        [Route("/api/getManagedEmployees")]
+        public async Task<ActionResult> GetManagedEmployees()
+        {
+            string? id = User.FindFirstValue("id");
+
+            if (!String.IsNullOrEmpty(id))
+            {
+                var managedEmployees = await _context.Employees
+                    .Where(x => x.EmployeeManagerId == Convert.ToInt32(id))
+                    .Select(x => 
+                        new 
+                        {
+                            id = x.EmployeeId, 
+                            firstName = x.EmployeeFirstName, 
+                            lastName = x.EmployeeSurname 
+                        }).ToListAsync();
+
+                return Ok(managedEmployees);
+            }
+            else
+            {
+                return BadRequest(); 
             }
         }
 

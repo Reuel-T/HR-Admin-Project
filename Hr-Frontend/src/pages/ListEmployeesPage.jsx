@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useReducer, useState } from 'react';
-import UserContext from '../context/UserContext';
-import apiClient from '../api/http';
+import TokenUserContext from '../context/TokenUserContext';
+import useAxios from '../hooks/useAxios';
 import { useQuery } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
@@ -10,6 +10,8 @@ import { Box } from '@mui/system';
 function ListEmployeesPage(){
 
     const [employees, updateEmployees] = useState([]);
+
+    const apiClient = useAxios();
 
     /**
      * Getting the user context

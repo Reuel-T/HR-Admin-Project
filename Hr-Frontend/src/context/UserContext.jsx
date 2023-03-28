@@ -16,6 +16,6 @@ export function UserProvider({ children }) {
             {children}
         </UserContext.Provider>
     )
-}
+};
 
 export default UserContext;

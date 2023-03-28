@@ -2,6 +2,7 @@ import { Container, CssBaseline } from '@mui/material'
 import React, { useState } from 'react'
 import { Outlet, Route, Routes } from 'react-router-dom'
 import Navbar from '../components/Navbar'
+import { TokenUserProvider } from '../context/TokenUserContext'
 import {UserProvider} from '../context/UserContext'
 import AddDepartmentPage from '../pages/AddDepartmentPage'
 import AddEmployeePage from '../pages/AddEmployeePage'
@@ -17,7 +18,7 @@ function MainLayout() {
 
   return (
     <>
-      <UserProvider>
+      <TokenUserProvider>
         <CssBaseline/>
         <Navbar />
         <Container sx={{width : '90%'}}>
@@ -62,7 +63,7 @@ function MainLayout() {
               element={<EditEmployeePage />} />
           </Routes>
         </Container>
-      </UserProvider>
+      </TokenUserProvider>
     </>
   )
 }

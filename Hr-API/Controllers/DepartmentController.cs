@@ -8,11 +8,16 @@ using Microsoft.EntityFrameworkCore;
 using Hr_API.Models;
 using Hr_API.ViewModels;
 using Hr_API.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Hr_API.Controllers
 {
+    /// <summary>
+    ///     Handles Actions Related to Departments
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class DepartmentController : ControllerBase
     {
         private readonly HrAdminContext _context;
@@ -22,8 +27,14 @@ namespace Hr_API.Controllers
             _context = context;
         }
 
-        // GET: api/Department
-        //gets a list of departments, filterable by the status
+        /// <summary>
+        ///     Get Departments
+        /// </summary>
+        /// <param name="status">Filter Option(Boolean)</param>
+        /// <returns>A List of departments</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DepartmentVM>>> GetDepartments(bool? status)
         {

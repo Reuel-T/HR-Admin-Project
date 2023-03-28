@@ -15,6 +15,9 @@ using Hr_API.Helpers;
 
 namespace Hr_API.Controllers
 {
+    /// <summary>
+    ///     Handles Auth Actions
+    /// </summary>
     [Route("/[controller]/[action]")]
     [ApiController]
     public class AuthController : Controller
@@ -28,6 +31,15 @@ namespace Hr_API.Controllers
             _configuration = configuration;
         }
 
+        /// <summary>
+        ///     Login
+        /// </summary>
+        /// <remarks>
+        /// {
+        ///     "username" : "hradmin@test.com"
+        ///     "password" : "TestPass1234"
+        /// }
+        /// </remarks>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -78,7 +90,7 @@ namespace Hr_API.Controllers
                     return Ok(new { Model = DTOtoVM.EmployeeVM(e), token = tokenHandler.WriteToken(token)});
                 }
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Something Broke");
             }

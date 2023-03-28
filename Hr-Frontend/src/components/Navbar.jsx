@@ -15,12 +15,13 @@ import { Link, useNavigate, NavLink } from 'react-router-dom';
 import SupervisedUserCircleRounded from '@mui/icons-material/SupervisedUserCircleRounded';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Logout from '@mui/icons-material/Logout';
+import TokenUserContext from '../context/TokenUserContext';
 
 function Navbar(props) {
 
   const { window } = props;
   
-  const { user, updateUser } = useContext(UserContext);
+  const { user, updateUser } = useContext(TokenUserContext);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const navigate = useNavigate()
 

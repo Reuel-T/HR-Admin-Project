@@ -7,17 +7,22 @@ import {CssBaseline} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import { useMutation } from 'react-query';
-import apiClient from '../api/http';
+//import apiClient from '../api/http';
 import UserContext from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
 
+import useAxios from '../hooks/useAxios';
+import  TokenUserContext  from '../context/TokenUserContext';
+
 function Login() {
     
+    const apiClient = useAxios();
+
     //data to be used in the login function
     let loginData = null;
 
     //using context to allow the user to be accessed throughout the app
-    const {user, updateUser} = useContext(UserContext);
+    const { user, updateUser, updateToken } = useContext(TokenUserContext);
     const navigate = useNavigate();
 
     //runs on form submit
@@ -37,7 +42,12 @@ function Login() {
         mutationKey: ['login-user'],
         mutationFn: loginUser,
         onSuccess: ({data}) => {
-            updateUser(data);
+                        
+            updateUser(data.model);
+            updateToken(data.token);
+
+            console.log(data.model);
+            console.log(data.token);
             navigate('/');
         },
         onError: ({ data }) => {

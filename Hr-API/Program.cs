@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +44,13 @@ builder.Services.AddSwaggerGen(c =>
         Title = "HR Admin API",
         Version = "v1"
     });
+
+    System.Console.WriteLine(Assembly.GetExecutingAssembly().GetName().Name);
+
+    // generate the XML docs that'll drive the swagger docs
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {

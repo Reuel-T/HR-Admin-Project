@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
 
 namespace Hr_API.Models;
-
 public partial class Employee
 {
     public int EmployeeId { get; set; }

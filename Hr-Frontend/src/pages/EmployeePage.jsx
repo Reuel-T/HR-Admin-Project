@@ -2,14 +2,17 @@ import { Container, Box, Paper, Typography, Avatar, Divider, Stack, Button } fro
 import React, { useContext, useState } from 'react'
 import { useQuery } from 'react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import apiClient from '../api/http';
+import useAxios from '../hooks/useAxios';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { useEffect } from 'react';
 import UserContext from '../context/UserContext';
 import SupervisorAccountRoundedIcon from '@mui/icons-material/SupervisorAccountRounded';
+import TokenUserContext from '../context/TokenUserContext';
 
 function EmployeePage() {
+
+    const apiClient = useAxios();
 
     /**
      * The ID from the route
@@ -19,7 +22,7 @@ function EmployeePage() {
     /**
      * Getting the user context
     */
-    const { user } = useContext(UserContext);
+    const { user } = useContext(TokenUserContext);
 
     //navigation object
     const navigate = useNavigate();
@@ -40,9 +43,9 @@ function EmployeePage() {
     //function to get the employee
     async function getEmployee() {
         if (id !== undefined) {
-            return await apiClient.get(`/api/employee/${id}`);
+            return await apiClient.get(`/api/employees/${id}`);
         } else {
-            return await apiClient.get(`/api/employee/${user.employeeID}`);
+            return await apiClient.get(`/api/employees/${user.employeeID}`);
         }
     }
 
